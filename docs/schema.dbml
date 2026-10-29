@@ -1,0 +1,75 @@
+Table users {
+  id SERIAL [primary key]
+  username varchar(50) [not null, unique]
+  email varchar(255) [not null, unique]
+  password_hash text [not null]
+  role varchar(20) [not null, default: 'user', note: 'user, moderator, admin']
+  created_at timestamptz [not null, default: `now()`]
+}
+
+Table movies {
+  id serial [pk]
+  tmdb_id integer [not null, unique]
+}
+
+Table groups {
+  id serial [pk]
+  name varchar(100) [not null]
+  description text
+  visibility varchar(10) [not null, default: 'public', note: 'public, private']
+  created_by integer [ref: > users.id]
+  created_at timestamptz [not null, default: `now()`]
+}
+
+Table group_members {
+  group_id integer [not null, ref: > groups.id]
+  user_id integer [not null, ref: > users.id]
+  role varchar(20) [not null, default: 'member', note: 'member, moderator, admin']
+  joined_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (group_id, user_id) [pk]
+  }
+}
+
+Table reviews {
+  id serial [pk]
+  user_id integer [not null, ref: > users.id]
+  movie_id integer [not null, ref: > movies.id]
+  rating smallint [not null, note: '1-5']
+  body text
+  visibility varchar(10) [not null, default: 'public', note: 'public, group']
+  created_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (user_id, movie_id) [unique]
+  }
+}
+
+Table lists {
+  id serial [pk]
+  name varchar(100) [not null]
+  type varchar(20) [not null, default: 'custom', note: 'watchlist, favorites, custom, group']
+  user_id integer [ref: > users.id, note: 'null if group list']
+  group_id integer [ref: > groups.id, note: 'null if user list']
+  share_token varchar(64) [unique, note: 'null if not shared by link']
+  visibility varchar(10) [not null, default: 'private', note: 'private, group, link, public']
+  created_at timestamptz [not null, default: `now()`]
+}
+
+Table list_items {
+  list_id integer [not null, ref: > lists.id]
+  movie_id integer [not null, ref: > movies.id]
+  added_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (list_id, movie_id) [pk]
+  }
+}
+
+Table watched {
+  id serial [pk]
+  user_id integer [not null, ref: > users.id]
+  movie_id integer [not null, ref: > movies.id]
+  watched_on date
+}
