@@ -1,4 +1,6 @@
-# web-ohjelmoinnin-sovellusprojekti
+# movie-app
+
+Julkaistu sovellus: https://salmon-sea-01ddb8b03.5.azurestaticapps.net
 
 ## rakenne
 
@@ -14,8 +16,8 @@
 ## asennus
 
 ```
-git clone https://github.com/N3mN3mm/web-ohjelmoinnin-sovellusprojekti.git
-cd web-ohjelmoinnin-sovellusprojekti
+git clone https://github.com/webSovellusProjekti/movie-app.git
+cd movie-app
 cp server/.env.example server/.env # muokkaa .env-tiedostoa tarpeen mukaan
 cd server && npm install
 cd ../client && npm install
