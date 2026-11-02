@@ -36,5 +36,20 @@ services:
       timeout: 5s
       retries: 5
 
+  frontend:
+    build: ./client
+    command: npm run dev
+    environment:
+      - API_PROXY_TARGET=http://backend:3001
+    ports:
+      - "${FRONTEND_EXPOSED_PORT:-5173}:5173"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   db_data:
