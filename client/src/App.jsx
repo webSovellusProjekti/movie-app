@@ -10,25 +10,26 @@ import NotFound from './pages/NotFound'
 import Navbar from './components/Navbar'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import{ Routes,Route } from 'react-router-dom' 
-//sivun polkua varten
+import{ Routes,Route } from 'react-router-dom' //sivun polkua varten
+import { AuthProvider } from './context/AuthProvider' //autentikointi ja auktorisointia varten
+
 
 function App() {
 
   return (
-    <>
+    <AuthProvider>
       <Navbar />
       <Header />
       <div id="container">
         <Routes>
           <Route path="/" exact element={<Home />}/>
-          <Route path="/Kirjautuminen" exact element={<LogIn />}/>
-          <Route path="/Rekisterointi" exact element= {<Register />} />
+          <Route path="/kirjautuminen" exact element={<LogIn />}/>
+          <Route path="/rekisterointi" exact element= {<Register />} />
           <Route path="/*" exact element={<NotFound />} />
         </Routes>
       </div>
       <Footer />
-    </>
+    </AuthProvider>
   )
 }
 
