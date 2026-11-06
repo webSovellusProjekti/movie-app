@@ -1,7 +1,9 @@
 import React from 'react'
+import './Header.css'
 
+//Sivun keskiosa
 export default function Header() {
   return (
-    <div>Header</div>
+    <div id="header">Header</div>
   )
 }
