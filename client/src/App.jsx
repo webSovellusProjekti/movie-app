@@ -17,7 +17,7 @@ import MovieCard from './components/MovieCard'
 function App() {
 
   return (
-    <>
+    <AuthProvider>
       <Navbar />
       <Header />
       <div id="container">
@@ -30,7 +30,7 @@ function App() {
         </Routes>
       </div>
       <Footer />
-    </>
+    </AuthProvider>
   )
 }
 
