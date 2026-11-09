@@ -1,4 +1,11 @@
 {
+  "name": "movie-app",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm --prefix server ci && npm --prefix client ci",
+    "build": "npm --prefix client run build",
+    "start": "node server/src/index.js"
+  },
   "dependencies": {
     "bootstrap": "^6.0.0-alpha.1"
   }
