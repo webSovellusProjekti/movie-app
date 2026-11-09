@@ -10,13 +10,14 @@ import NotFound from './pages/NotFound'
 import Navbar from './components/Navbar'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import{ Routes,Route } from 'react-router-dom' 
-//sivun polkua varten
+import{ Routes,Route } from 'react-router-dom' //sivun polkua varten
+import { AuthProvider } from './context/AuthProvider' //autentikointi ja auktorisointia varten
+
 
 function App() {
 
   return (
-    <>
+    <AuthProvider>
       <Navbar />
       <Header />
       <div id="container">
@@ -29,7 +30,7 @@ function App() {
         </Routes>
       </div>
       <Footer />
-    </>
+    </AuthProvider>
   )
 }
 

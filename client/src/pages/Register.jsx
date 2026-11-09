@@ -11,11 +11,15 @@ export default function Register() {
     confirmPassword: ""
   });
 
-  // Virhe ilmoitus
+  // Virheilmoitus
   const [error, setError] = useState("");
 
   // Onnistuminen
   const [success, setSuccess] = useState("");
+
+  // Salasanojen näkyvyys
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Salasanan tarkistus
   const validatePassword = (password) => {
@@ -111,22 +115,42 @@ export default function Register() {
         />
 
         <label>Salasana</label>
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          placeholder="Salasana"
-        />
+        <div className="password-input-container">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Salasana"
+          />
+
+          <button
+            type="button"
+            className="password-toggle"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "Piilota" : "Näytä"}
+          </button>
+        </div>
 
         <label>Kirjoita salasana uudelleen</label>
-        <input
-          type="password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          placeholder="Salasana uudelleen"
-        />
+        <div className="password-input-container">
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            placeholder="Salasana uudelleen"
+          />
+
+          <button
+            type="button"
+            className="password-toggle"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
+            {showConfirmPassword ? "Piilota" : "Näytä"}
+          </button>
+        </div>
 
         <div className="password-requirements">
           <p>Salasanan tulee sisältää:</p>
