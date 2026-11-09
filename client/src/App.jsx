@@ -22,8 +22,9 @@ function App() {
       <div id="container">
         <Routes>
           <Route path="/" exact element={<Home />}/>
-          <Route path="/Kirjautuminen" exact element={<LogIn />}/>
-          <Route path="/Rekisterointi" exact element= {<Register />} />
+          {/* <Route path="/Kirjautuminen" exact element={<LogIn />}/>
+          muutettu, että navigointuu oikein, korjataan myöhemmin */}
+          <Route path="/Kirjautuminen" exact element= {<Register />} />
           <Route path="/*" exact element={<NotFound />} />
         </Routes>
       </div>
