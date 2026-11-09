@@ -1,6 +1,6 @@
 # movie-app
 
-Julkaistu sovellus: https://salmon-sea-01ddb8b03.5.azurestaticapps.net
+Julkaistu sovellus: https://movie-app-2026-d2dcfqeycwafhca3.swedencentral-01.azurewebsites.net/
 
 ## rakenne
 
@@ -92,3 +92,24 @@ Clientin pitäisi olla nyt saatavilla osoitteessa `http://localhost:5173`. Proxy
 
 - `main` on "suojattu": ei pusketa suoraan tähän, muutokset tehdään pull requesteina
 - Esimerkiksi `omanimi-dev` branchilla tehdään muutokset, ja kun se on valmis, tehdään pull request mainiin. Pull requestin hyväksyy toinen tiimin jäsen.
+
+## Julkaistu Azureen
+
+Sovellus ajetaan yhdessä Azure App Service -web-sovelluksessa (Node 24, Linux). Express tarjoilee sekä API:n että valmiiksi käännetyn Reactin (`client/dist`) samasta osoitteesta. Tietokanta on Azure Database for PostgreSQL flexible server.
+
+Osoite: https://movie-app-2026-d2dcfqeycwafhca3.swedencentral-01.azurewebsites.net/
+
+Tarkistus: `api/health` (palvelin) ja `/api/health/db` (tietokantayhteys).
+
+### Miten julkaisu toimii
+
+- Push `main`-haaraan käynnistää GitHub Actions -workflowin (`.github/workflows/`). Se asentaa riippuvuudet, ajaa `npm run build` ja vie paketin App serviceen.
+- Juuren `package.json` sisältää Azuren tarvitsemat skriptit: `build` (kääntää clientin) ja `start` (käynnistää Expressin).
+
+### Azuren asetukset
+
+App Servicen Environment variables -kohdassa on seuraavat asetukset: `NODE_ENV`, `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` ja `DB_SSL`. Arvot ovat vain Azuressa. Salasanaa ei kirjoiteta koodiin, READMEen eikä GitHubiin. `PORT`-asetusta ei lisätä, koska App Service antaa sen itse.
+
+### Tietokannan skeema Azuressa
+
+`server/db/schema.sql` ei aja itsestään Azuressa. Skeeman muutokset ajetaan tietokantaan erikseen (esimerkiksi DBeaverilla tai `psql`-komennolla). Älä aja koko tiedostoa uudelleen olemassa olevaan tietokantaan, koska taulut ovat jo olemassa.
