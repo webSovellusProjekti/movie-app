@@ -10,6 +10,9 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.set('trust proxy', 1);
+
 app.use(sessionMiddleware);
 app.use('/api/auth', authRoutes); // autentikointi routet
 

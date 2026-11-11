@@ -181,3 +181,14 @@ CREATE TABLE public.list_items (
 	CONSTRAINT list_items_list_id_fk FOREIGN KEY (list_id) REFERENCES public.lists(id) ON DELETE CASCADE,
 	CONSTRAINT list_items_movie_id_fk FOREIGN KEY (movie_id) REFERENCES public.movies(id) ON DELETE CASCADE
 );
+
+-- Istuntojen tallentamiseen käytettävä taulu
+CREATE TABLE IF NOT EXISTS user_sessions (
+    sid VARCHAR NOT NULL PRIMARY KEY,
+    sess JSON NOT NULL,
+    expire TIMESTAMP WITHOUT TIME ZONE NOT NULL
+);
+
+-- Indeksi vanhentuneiden istuntojen hakemiseen
+CREATE INDEX IF NOT EXISTS "IDX_session_expire"
+ON user_sessions (expire);
