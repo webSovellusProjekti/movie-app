@@ -22,6 +22,15 @@ export default function Home() {
     //Muutetaan tiedot olioiksi
     setMovies(data.results);
   }
+
+  async function searchMovies() {
+    const response = await fetch(
+      `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}`
+    );
+    const data = await response.json();
+    setMovies(data.results);
+  }
+
   //Tallennetaan tiedot movies tilaan
   useEffect(() => {
     fetchMovies();
@@ -37,9 +46,7 @@ export default function Home() {
         name="search"
         placeholder="Hae elokuvia"/>
 
-      <button type="submit">
-        Hae
-        </button>
+      <button onClick={searchMovies}>Hae</button>
 
         {/* Haetaan elokuvien tiedot */}
         {movies.map((movie) => (  
