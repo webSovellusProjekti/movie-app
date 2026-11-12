@@ -14,7 +14,6 @@ export default function Home() {
 
   //Haetaan elokuvien tiedot TMDB:stä
   async function fetchMovies() {
-    console.log(searchTerm)
     const response = await fetch(
       `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`
     );
@@ -45,15 +44,22 @@ export default function Home() {
       <input
         type="text"
         name="search"
-        placeholder="Hae elokuvia"/>
+        placeholder="Hae elokuvia"
 
-      <button onClick={searchMovies}>Hae</button>
+        // Tallennetaan hakusana searchTerm tilaan
+        onChange={(e) => setSearchTerm(e.target.value)}/> 
 
-        {/* Haetaan elokuvien tiedot */}
-        {movies.map((movie) => (  
-          <MovieCard key={movie.id} 
-          movie={movie} />
-        ))}
+        <button onClick={searchMovies}>Hae</button>
+
+        <div className="movies-container">
+        
+          {/* Haetaan elokuvien tiedot */}  
+          {movies.map((movie) => (  
+            <MovieCard key={movie.id} 
+            movie={movie} />
+          ))}
+
+        </div>
 
     </div>
 
