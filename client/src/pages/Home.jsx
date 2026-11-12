@@ -14,6 +14,7 @@ export default function Home() {
 
   //Haetaan elokuvien tiedot TMDB:stä
   async function fetchMovies() {
+    console.log(searchTerm)
     const response = await fetch(
       `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`
     );

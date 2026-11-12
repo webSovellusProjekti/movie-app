@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthProvider'
 
 export default function LogIn() {
+
+  const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -28,7 +31,7 @@ export default function LogIn() {
   };
 
   // Lomakkeen lähetys
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     setError("");
@@ -40,14 +43,15 @@ export default function LogIn() {
       return;
     }
 
-    // Tässä tarkistetaan käyttäjän tunnukset tietokannasta
-    // Backend rajapinta puuttuu vielä
+    try {
+      // Lähetetään kirjautumistiedot backendille
+      await login(formData.username, formData.password);
 
-    // HUOM! VÄLIAIKAINEN TARKISTUS!
-    console.log("Login Data:", formData);
-
-    setSuccess("Kirjautumistiedot vastaanotettu!")
-  };
+      setSuccess("Kirjautuminen onnistui!");
+    } catch (err) {
+      setError(err.message || "Kirjautuminen epäonnistui.");
+  }
+};
 
   return (
     <div className="register-container">
@@ -99,7 +103,7 @@ export default function LogIn() {
 
         <p>
           Eikö sinulla ole vielä käyttäjätiliä? {' '}
-          <Link to="/Rekisterointi">
+          <Link to="/rekisterointi">
             Rekisteröidy tästä
           </Link>
         </p>

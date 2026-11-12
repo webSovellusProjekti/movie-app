@@ -90,6 +90,17 @@ erDiagram
     }
 ```
 
+## Istuntojen hallinta
+
+```mermaid
+erDiagram
+    USER_SESSIONS {
+        string sid PK
+        json sess
+        timestamp expire
+    }
+```
+
 ## Suunnittelupäätökset (ryhmän ehdotus, ei vahvistettu)
 
 - Elokuvan tiedot haetaan ulkoisesta rajapinnasta (F5), joten MOVIES tallentaa vain rajapinnan tunnisteen. Tällä paikallinen rivi toimii arvostelujen viiteavaimena.
@@ -103,6 +114,7 @@ erDiagram
 - Ryhmän yhteinen lista (F7) on LISTS-rivi, jolla group_id on asetettu. Muokkausoikeus (F31) tarkistetaan sovelluslogiikassa (S3).
 - Katsotut ovat omassa WATCHED-taulussa (ei vielä vaatimuksissa), koska katsomispäivä kuuluu käyttäjän ja elokuvan väliseen suhteeseen. Sama elokuva voi olla katsottu useasti, joten (user_id, movie_id) ei ole yksilöllinen.
 - Lista kuuluu joko käyttäjälle tai ryhmälle, ei molemmille (CHECK-ehto SQL-skeemassa).
+- Kirjautumisistunnot tallennetaan USER_SESSIONS-tauluun PostgreSQL-tietokantaan. Istuntojen hallinnasta vastaa express-session ja connect-pg-simple.
 
 ## Avoimet kysymykset
 
