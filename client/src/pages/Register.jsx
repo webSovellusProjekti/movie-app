@@ -1,5 +1,6 @@
 import React from 'react'
 import {useState} from 'react'
+import { api } from '../services/api'
 
 export default function Register() {
 
@@ -21,6 +22,9 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // Lomaketta ollaan lähettämässä
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Salasanan tarkistus
   const validatePassword = (password) => {
     const passwordRegex =
@@ -40,7 +44,7 @@ export default function Register() {
   };
 
   // Lomakkeen lähetys
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     setError("");
@@ -76,10 +80,36 @@ export default function Register() {
       return;
     }
 
-    // Testi tarkistus
-    setSuccess("Lomakkeen kaikki tiedot ovat kunnossa!")
-    console.log("Registeration data:", formData);
-  }
+    // Lähetetään tiedot backendille
+    try {
+      setIsSubmitting(true);
+
+      await api('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password
+        })
+      });
+
+      setSuccess("Rekisteröityminen onnistui!");
+
+      // Tyhjennetään lomake onnistumisen jälkeen
+      setFormData({
+        username: "",
+        email: "",
+        confirmEmail: "",
+        password: "",
+        confirmPassword: ""
+      });
+
+    } catch (err) {
+      setError(err.message || "Rekisteröityminen epäonnistui.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="register-container">
@@ -173,8 +203,8 @@ export default function Register() {
           <p className="success-message">{success}</p>
         )}
 
-        <button type="submit">
-          Valmis
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Rekisteröidään..." : "Valmis"}
         </button>
         
       </form>

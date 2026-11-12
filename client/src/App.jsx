@@ -24,7 +24,7 @@ function App() {
         <Routes>
           <Route path="/" exact element={<Home />}/>
           <Route path="/kirjautuminen" exact element={<LogIn />}/>
-          <Route path="/rekisteroiminen" exact element= {<Register />} />
+          <Route path="/rekisterointi" exact element= {<Register />} />
           <Route path="/movies/:id" exact element={<MovieCard />} />
           <Route path="/*" exact element={<NotFound />} />
         </Routes>

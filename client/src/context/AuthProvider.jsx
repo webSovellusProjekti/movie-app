@@ -14,12 +14,12 @@ export function AuthProvider({ children }) {
       .finally(() => setLoading(false));
   }, []);
 
-  async function login(email, password) {
+  async function login(username, password) {
     const data = await api('/auth/login',
        { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }) 
+        body: JSON.stringify({ username, password })
     });
 
     setUser(data.user);
