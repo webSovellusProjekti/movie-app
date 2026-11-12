@@ -1,8 +1,5 @@
 // Ottaa sovelluksen käyttöön, tarjoilee frontendin ja käynnistää palvelimen
 
-import path from 'node:path';
-import fs from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import 'dotenv/config';
 import path from 'node:path';
 import fs from 'node:fs';
@@ -30,7 +27,7 @@ if (fs.existsSync(clientDist)) {
 }
 
 // Käynnistetään palvelin
-const clientDist = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist');
+// const clientDist = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../client/dist');
 
 if (fs.existsSync(clientDist)) {
   app.use(express.static(clientDist));
