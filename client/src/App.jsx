@@ -11,7 +11,7 @@ import Navbar from './components/Navbar'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import{ Routes,Route } from 'react-router-dom' //sivun polkua varten
-// import { AuthProvider } from './context/AuthProvider' //autentikointi ja auktorisointia varten
+import { AuthProvider } from './context/AuthProvider' //autentikointi ja auktorisointia varten
 import MovieCard from './components/MovieCard'
 
 function App() {
