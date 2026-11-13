@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import './MovieCard.css'
 
 export default function MovieCard({movie}) {
         //Katsotaan elokuvanm url osite ja jos ei löydy niin arvoksi null

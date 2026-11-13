@@ -1,11 +1,11 @@
-body {
+.app {
   display: flex;
   flex-direction: column;
   min-height: 100dvh; /* Takes full height of the viewport */
   margin: 0;
 }
 
-main {
+#container {
   flex: 1; /* Expands to fill all available empty space */
 }
 
@@ -18,7 +18,6 @@ main {
 /* elokuvien asetteluun */
 .movies-container {
     display:grid;
-    width: 100%;
     grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
     gap:20px;
     margin-top: 2rem;
