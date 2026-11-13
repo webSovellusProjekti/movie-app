@@ -1,0 +1,51 @@
+
+.movie-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Elokuvan juliste */
+.movie-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: contain;
+    background-color: #eeeeee;
+}
+
+/* Elokuvan nimi */
+.movie-card h3 {
+    margin: 12px 10px 5px;
+    font-size: 1rem;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+/* Julkaisuvuosi */
+.movie-card p {
+    margin: 0 10px 12px;
+    font-size: 0.9rem;
+    color: #555;
+    text-align: center;
+}
+
+/* Hiiren ollessa kortin päällä */
+.movie-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+
+/* Näppäimistöllä navigointi */
+.movie-card:focus-visible {
+    outline: 3px solid #d86ba5;
+    outline-offset: 3px;
+}

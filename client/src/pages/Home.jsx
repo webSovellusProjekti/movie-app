@@ -1,5 +1,5 @@
 import React from 'react'
-import {useState, useEffect} from 'react'
+import {useState, useEffect } from 'react'
 import MovieCard from '../components/MovieCard'
 
 export default function Home() {
@@ -91,7 +91,13 @@ export default function Home() {
         <div className="pages">
 
           <button
-            onClick={() => setCurrentPage(currentPage - 1)}
+            onClick={() => {
+              setCurrentPage(currentPage - 1)
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+              })
+            }}
             disabled={currentPage === 1}
           >
             Edellinen
@@ -102,7 +108,13 @@ export default function Home() {
           </span>
 
           <button
-            onClick={() => setCurrentPage(currentPage + 1)}
+            onClick={() => {
+              setCurrentPage(currentPage + 1)
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+              })
+            }}
             disabled={currentPage === totalPages}
           >
             Seuraava
