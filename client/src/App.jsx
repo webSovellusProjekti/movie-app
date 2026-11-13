@@ -18,18 +18,20 @@ function App() {
 
   return (
     <AuthProvider>
-      <Navbar />
-      <Header />
-      <div id="container">
-        <Routes>
-          <Route path="/" exact element={<Home />}/>
-          <Route path="/kirjautuminen" exact element={<LogIn />}/>
-          <Route path="/rekisterointi" exact element= {<Register />} />
-          <Route path="/movies/:id" exact element={<MovieCard />} />
-          <Route path="/*" exact element={<NotFound />} />
-        </Routes>
-      </div>
-      <Footer />
+      <body>
+        <Navbar />
+        <Header />
+        <div id="container">
+          <Routes>
+            <Route path="/" exact element={<Home />}/>
+            <Route path="/kirjautuminen" exact element={<LogIn />}/>
+            <Route path="/rekisterointi" exact element= {<Register />} />
+            <Route path="/movies/:id" exact element={<MovieCard />} />
+            <Route path="/*" exact element={<NotFound />} />
+          </Routes>
+        </div>
+        <Footer />
+      </body>
     </AuthProvider>
   )
 }

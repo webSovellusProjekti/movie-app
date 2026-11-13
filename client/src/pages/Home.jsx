@@ -9,6 +9,17 @@ export default function Home() {
   //Tyhjä hakurivi
   const [movies, setMovies] = useState([])
 
+  //Sivun vaihto (12 elokuvaa per sivu)
+  const [currentPage, setCurrentPage] = useState(1)
+  const moviesPerPage = 12
+
+  const indexOfLastMovie = currentPage * moviesPerPage
+  const indexOfFirstMovie = indexOfLastMovie - moviesPerPage
+
+  const currentMovies = movies.slice(indexOfFirstMovie, indexOfLastMovie)
+
+  const totalPages = Math.ceil(movies.length / moviesPerPage)
+
   //Haetaan apikey kautta elokuvia TMDB:stä
   const apiKey = import.meta.env.VITE_TMDB_API_KEY;
 
@@ -29,6 +40,7 @@ export default function Home() {
     );
     const data = await response.json();
     setMovies(data.results);
+    setCurrentPage(1);
   }
   //Katsotaan elokuvien lisätiedot
 
@@ -69,10 +81,32 @@ export default function Home() {
         <div className="movies-container">
         
           {/* Haetaan elokuvien tiedot */}  
-          {movies.map((movie) => (  
+          {currentMovies.map((movie) => (  
             <MovieCard key={movie.id} 
             movie={movie} />
           ))}
+
+        </div>
+
+        <div className="pages">
+
+          <button
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Edellinen
+          </button>
+
+          <span>
+            Sivu {currentPage} / {totalPages}
+          </span>
+
+          <button
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Seuraava
+          </button>
 
         </div>
 
