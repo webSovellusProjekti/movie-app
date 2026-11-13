@@ -1,6 +1,7 @@
 import React from 'react'
 import {useState, useEffect } from 'react'
 import MovieCard from '../components/MovieCard'
+import { useNavigate } from 'react-router-dom'
 
 export default function Home() {
   //Tuodaan elokuvien tiedot, yksi kerrallaan
@@ -23,6 +24,9 @@ export default function Home() {
   //Haetaan apikey kautta elokuvia TMDB:stä
   const apiKey = import.meta.env.VITE_TMDB_API_KEY;
 
+  //Navigoi lisätiedot eri sivulle
+  const navigate = useNavigate();
+
   //Haetaan elokuvien tiedot TMDB:stä
   async function fetchMovies() {
     const response = await fetch(
@@ -44,16 +48,15 @@ export default function Home() {
   }
   //Katsotaan elokuvien lisätiedot
 
-  // const[showMovies,setShowMovies] = useState(false)
-  async function showMovies(){
-    if(showMovies===false){
-      setShowMovies(true)
-    }
-    else {
-      setShowMovies(false)
-    }
-  }
-  <button onClick={showMovies}>Näytä lisätiedot</button>
+  // async function showMovies(){
+  //   if(showMovies===false){
+  //     setShowMovies(true)
+  //   }
+  //   else {
+  //     setShowMovies(false)
+  //   }
+  // }
+  // <button onClick={showMovies}>Näytä lisätiedot</button>
 
 
   //Tallennetaan tiedot movies tilaan
@@ -76,7 +79,9 @@ export default function Home() {
         onChange={(e) => setSearchTerm(e.target.value)}/> 
 
         <button onClick={searchMovies}>Hae</button>
-        {/* <button onClick={showMovies}>Näytä lisätiedot</button> */}
+
+      
+        {/* <button onClick={() => navigate( '/movies/${movie.id}')}>Näytä lisätiedot</button> */}
 
         <div className="movies-container">
         
