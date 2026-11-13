@@ -30,11 +30,25 @@ export default function Home() {
     const data = await response.json();
     setMovies(data.results);
   }
+  //Katsotaan elokuvien lisätiedot
+
+  // const[showMovies,setShowMovies] = useState(false)
+  async function showMovies(){
+    if(showMovies===false){
+      setShowMovies(true)
+    }
+    else {
+      setShowMovies(false)
+    }
+  }
+  <button onClick={showMovies}>Näytä lisätiedot</button>
+
 
   //Tallennetaan tiedot movies tilaan
   useEffect(() => {
     fetchMovies();
     }, []); 
+
 
   return (
     <div className="search-container">
@@ -50,6 +64,7 @@ export default function Home() {
         onChange={(e) => setSearchTerm(e.target.value)}/> 
 
         <button onClick={searchMovies}>Hae</button>
+        {/* <button onClick={showMovies}>Näytä lisätiedot</button> */}
 
         <div className="movies-container">
         
