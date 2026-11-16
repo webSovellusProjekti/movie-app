@@ -48,16 +48,14 @@ export default function Home() {
   }
   //Katsotaan elokuvien lisätiedot
 
-  // async function showMovies(){
-  //   if(showMovies===false){
-  //     setShowMovies(true)
-  //   }
-  //   else {
-  //     setShowMovies(false)
-  //   }
-  // }
-  // <button onClick={showMovies}>Näytä lisätiedot</button>
-
+  async function showMovies(){
+    if(showMovies===false){
+      setShowMovies(true)
+    }
+    else {
+      setShowMovies(false)
+    }
+  }
 
   //Tallennetaan tiedot movies tilaan
   useEffect(() => {
@@ -79,9 +77,6 @@ export default function Home() {
         onChange={(e) => setSearchTerm(e.target.value)}/> 
 
         <button onClick={searchMovies}>Hae</button>
-
-      
-        {/* <button onClick={() => navigate( '/movies/${movie.id}')}>Näytä lisätiedot</button> */}
 
         <div className="movies-container">
         

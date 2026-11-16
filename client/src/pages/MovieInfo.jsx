@@ -12,34 +12,61 @@ export default function MovieInfo() {
 
     //Haetaan tiedot ja tallennetaan tiedot
     const [movie, setMovie] = useState(null);
+
+    //Haetaan näyttelijöiden tiedot
+    const [actors, setActors] = useState([]);
     
     useEffect(() => {
         async function fetchMovie(){
             const response = await fetch(
                 `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`
             );
-            
-            console.log("TMDB status:", response.status);
 
             const data= await response.json();
 
-            console.log("TMDB data:", data);
-            //Tallennetaan tiedot muuttujaan
             setMovie(data);
+
+            //Haetaan näyttelijätiedot
+            const creditsResponse = await fetch(
+                `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`
+            );
+
+            const creditsData = await creditsResponse.json();
+
+            setActors(creditsData.cast);
         }
         //Käynnistetään haku, kun sivu latautuu
         fetchMovie();
     }, [id]);
 
+    if (!movie) {
+        return <p>Ladataan elokuvan tietoja...</p>;
+    }
+
     
   return (
     <div>
-        <h3>Elokuvien tietoja ladataan...</h3>
-        {/* <img src={MovieInfo.poster}
-        alt={MovieInfo.title}/>
-        <h3>{MovieInfo.title}</h3>
-        <p>{MovieInfo.year}</p>
-        <p>{MovieInfo.rating}</p> */}
-        </div>
+        <h3>{movie.title}</h3>
+        <h4>{movie.actors}</h4>
+
+        <img
+            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            alt={movie.title}
+        />
+
+        <h4>Elokuvan kuvaus</h4>
+        <p>{movie.overview}</p>
+
+        <h4>Näyttelijät</h4>
+
+    <div>
+        {actors.slice(0, 10).map((actor) => (
+            <li key={actor.id}>
+                {actor.name} – {actor.character}
+            </li>
+        ))}
+    </div>
+    
+    </div>
   )
 }
