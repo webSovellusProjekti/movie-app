@@ -2,6 +2,7 @@ import React from 'react'
 import {useState, useEffect } from 'react'
 import MovieCard from '../components/MovieCard'
 import { useNavigate } from 'react-router-dom'
+import { api } from '../services/api'
 
 export default function Home() {
   //Tuodaan elokuvien tiedot, yksi kerrallaan
@@ -27,15 +28,16 @@ export default function Home() {
   //Navigoi lisätiedot eri sivulle
   const navigate = useNavigate();
 
-  //Haetaan elokuvien tiedot TMDB:stä
+  //Haetaan elokuvien tiedot Backendin kautta
   async function fetchMovies() {
-    const response = await fetch(
-      `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`
-    );
+    try {
+    const data = await api('/movies/popular');
     //Lähetetään tiedot json-muodossa
-    const data = await response.json();
-    //Muutetaan tiedot olioiksi
-    setMovies(data.results);
+    setMovies(data.movies ?? [])
+    }
+    catch {
+      setMovies([])
+    }
   }
 
   async function searchMovies() {
@@ -46,8 +48,8 @@ export default function Home() {
     setMovies(data.results);
     setCurrentPage(1);
   }
+  
   //Katsotaan elokuvien lisätiedot
-
   async function showMovies(){
     if(showMovies===false){
       setShowMovies(true)
@@ -68,6 +70,11 @@ export default function Home() {
       <h2>Elokuvat</h2>
       <h5>Voit hakea elokuvia nimellä, näyttelijällä tai ohjaajalla</h5>
 
+    {/* enter painikkeen toimivuus */}
+    <form onSubmit={(e) => {
+      e.preventDefault();
+      searchMovies();
+    }}>
       <input
         type="text"
         name="search"
@@ -76,8 +83,8 @@ export default function Home() {
         // Tallennetaan hakusana searchTerm tilaan
         onChange={(e) => setSearchTerm(e.target.value)}/> 
 
-        <button onClick={searchMovies}>Hae</button>
-
+        <button type="submit">Hae</button>
+    </form>
         <div className="movies-container">
         
           {/* Haetaan elokuvien tiedot */}  
