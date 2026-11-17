@@ -9,7 +9,6 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import{ Routes,Route } from 'react-router-dom' //sivun polkua varten
 import { AuthProvider } from './context/AuthProvider' //autentikointi ja auktorisointia varten
-import MovieCard from './components/MovieCard'
 import MovieInfo from './pages/MovieInfo'
 
 function App() {
