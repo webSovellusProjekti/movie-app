@@ -10,6 +10,7 @@ import Footer from './components/Footer'
 import{ Routes,Route } from 'react-router-dom' //sivun polkua varten
 import { AuthProvider } from './context/AuthProvider' //autentikointi ja auktorisointia varten
 import MovieCard from './components/MovieCard'
+import MovieInfo from './pages/MovieInfo'
 
 function App() {
 
@@ -23,7 +24,7 @@ function App() {
             <Route path="/" exact element={<Home />}/>
             <Route path="/kirjautuminen" exact element={<LogIn />}/>
             <Route path="/rekisterointi" exact element= {<Register />} />
-            <Route path="/movies/:id" exact element={<MovieCard />} />
+            <Route path="/movies/:id" exact element={<MovieInfo />} />
             <Route path="/*" exact element={<NotFound />} />
           </Routes>
         </div>

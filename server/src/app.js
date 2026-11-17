@@ -5,6 +5,7 @@ import cors from 'cors';
 import { pool } from './db.js';
 import { sessionMiddleware } from './config/session.js';
 import authRoutes from './routes/authRoutes.js';
+import movieRoutes from './routes/movieRoutes.js';
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.set('trust proxy', 1);
 
 app.use(sessionMiddleware);
 app.use('/api/auth', authRoutes); // autentikointi routet
+app.use('/api/movies', movieRoutes); // elokuvien routet
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
