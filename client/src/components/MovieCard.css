@@ -6,7 +6,7 @@
     min-width: 0;
     text-decoration: none;
     color: inherit;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 1);
     border-radius: 10px;
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -18,7 +18,7 @@
     width: 100%;
     aspect-ratio: 2 / 3;
     object-fit: contain;
-    background-color: #eeeeee;
+    background-color: rgba(238, 238, 238, 1);
 }
 
 /* Elokuvan nimi */
@@ -33,7 +33,7 @@
 .movie-card p {
     margin: 0 10px 12px;
     font-size: 0.9rem;
-    color: #555;
+    color: rgba(85, 85, 85, 1);
     text-align: center;
 }
 
@@ -46,6 +46,6 @@
 
 /* Näppäimistöllä navigointi */
 .movie-card:focus-visible {
-    outline: 3px solid #d86ba5;
+    outline: 3px solid rgba(216, 107, 165, 1);
     outline-offset: 3px;
 }
