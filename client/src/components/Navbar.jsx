@@ -1,30 +1,101 @@
-import React from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthProvider'
 import './Navbar.css'
 
 //Navigointipalkki sivun yläreunassa
 export default function Navbar() {
+
+  // Haetaan käyttäjän kirjautumistila ja uloskirjautumistoiminto
+  const {user, logout} = useAuth();
+
+  // Hallitaan dropdown-valikon näkyvyyttä
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Käyttäjän uloskirjautuminen
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setMenuOpen(false);
+    } catch (err) {
+      console.error('Uloskirjautuminen epäonnistui', err);
+    }
+  };
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
-        {/* Korvataan linkki osaan "/", jotta navigointuu etusivulle */}
-        {/* <a className="navbar-brand" href="/">Elokuvasovellus</a> */}
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-aria-expanded="false" aria-label="Toggle navigation">
+        
+        {/* Linkki etusivulle, aina näkyvissä */}
+        <Link className="nav-link" to="/">
+          Elokuvat
+        </Link>
+
+        <button 
+          className="navbar-toggler" 
+          type="button" 
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent" 
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false" 
+          aria-label="Toggle navigation"
+        >
           <span className="navbar-toggler-icon"></span>
         </button>
+
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li className="nav-item">
-            <Link className="nav-link" to="/">Elokuvasovellus</Link>
-          </li>
-          {/* <li className="nav-item">
-            <Link className="nav-link" to="/Kirjautuminen">Kirjautuminen</Link>
-          </li> */}
-          <li className="nav-item">
-            <Link className="nav-link" to="/Kirjautuminen">Kirjaudu</Link>
-          </li>
+          <ul className="navbar-nav navbar-auth mb-2 mb-lg-0">
+
+            {user ? (
+              // Näytetään kirjautuneelle käyttäjälle
+              <li className = "nav-item dropdown">
+                <button
+                  className="nav-link dropdown-toggle"
+                  type="button"
+                  onClick={() => setMenuOpen(!menuOpen)}
+                  aria-expanded={menuOpen}
+                >
+                  Oma tili
+                </button>
+
+                {menuOpen && (
+                  <ul className = "dropdown-menu show">
+
+                    <li>
+                      <button
+                        className="dropdown-item"
+                        onClick={handleLogout}
+                      >
+                        Kirjaudu ulos
+                      </button>
+                    </li>
+
+                    <li>
+                      <button
+                        className = "dropdown-item text-danger"
+                        onClick={() => {
+                          setMenuOpen(false);
+                        }}
+                      >
+                        Poista käyttäjätili
+                      </button>
+                    </li>
+
+                  </ul>
+                )}
+
+              </li>
+            ) : (
+              // Näytetään kirjautumattomalle käyttäjälle
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/Kirjautuminen">
+                    Kirjaudu
+                  </Link>
+                </li>
+              </>
+            )}
+
           </ul>
         </div>
       </div>

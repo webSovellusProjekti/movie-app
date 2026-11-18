@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthProvider'
 
 export default function LogIn() {
 
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -47,7 +48,9 @@ export default function LogIn() {
       // Lähetetään kirjautumistiedot backendille
       await login(formData.username, formData.password);
 
-      setSuccess("Kirjautuminen onnistui!");
+      // Ohjataan käyttäjä etusivulle onnistuneen kirjautumisen jälkeen
+      navigate('/');
+
     } catch (err) {
       setError(err.message || "Kirjautuminen epäonnistui.");
   }
