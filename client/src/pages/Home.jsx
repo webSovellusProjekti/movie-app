@@ -2,7 +2,7 @@ import React from 'react'
 import {useState, useEffect } from 'react'
 import MovieCard from '../components/MovieCard'
 import { useNavigate } from 'react-router-dom'
-import { api } from '../services/api'
+import { api } from '../services/api' //api-funktion käyttämiseen
 
 export default function Home() {
   //Tuodaan elokuvien tiedot, yksi kerrallaan
@@ -10,6 +10,9 @@ export default function Home() {
 
   //Tyhjä hakurivi
   const [movies, setMovies] = useState([])
+
+  //Tarkisteaan tilamuuttujan arvo ja vaihdetaan se päinvastaiseksi
+  const [showMovies, setShowMovies] = useState(false);
 
   //Sivun vaihto (12 elokuvaa per sivu)
   const [currentPage, setCurrentPage] = useState(1)
@@ -22,35 +25,49 @@ export default function Home() {
 
   const totalPages = Math.ceil(movies.length / moviesPerPage)
 
-  //Haetaan apikey kautta elokuvia TMDB:stä
-  const apiKey = import.meta.env.VITE_TMDB_API_KEY;
-
   //Navigoi lisätiedot eri sivulle
   const navigate = useNavigate();
 
   //Haetaan elokuvien tiedot Backendin kautta
   async function fetchMovies() {
     try {
+    //Kutsutaan api-funktiota ja pyydetään tietoja
     const data = await api('/movies/popular');
-    //Lähetetään tiedot json-muodossa
+    //Sijoitetaan tieto movies tilaan. (epäonnistuessa ??[] = Jos data.movies on null/undefined, asetetaan tilalle tyhjä taulukko [])
     setMovies(data.movies ?? [])
     }
+    //Virhetilanteessa tulee tyhjä taulukko
     catch {
       setMovies([])
     }
   }
 
+  //Hakusana toiminto backendin kautta
   async function searchMovies() {
-    const response = await fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}`
-    );
-    const data = await response.json();
-    setMovies(data.results);
-    setCurrentPage(1);
+    //Katsotaan onko hakukenttä tyhjä/välilyöntejä
+    if (!searchTerm.trim()) {
+      //Jos hakusanaa ei ole niin tuleew suositut elokuvat näkyviin
+      fetchMovies()
+      //laitetaan sivunumerointi
+      setCurrentPage(1)
+      return
+    }
+    try {
+      //Lähetetään hakusana backendille. EncodeURIComponent muuntaa hakusanan URL-osoitteeseen sopivaan muotoon
+      const data = await api(`/movies/search?q=${encodeURIComponent(searchTerm.trim())}`)
+      //tallennetaan tiedot movies tilaan
+      setMovies(data.movies ?? [])
+    }
+    //Virhetilanteessa tulee tyhjä taulukko
+    catch{
+      setMovies([])
+    }
+    //Palauteaan sivunumerointi ekalle sivulle.
+    setCurrentPage(1)
   }
-  
-  //Katsotaan elokuvien lisätiedot
-  async function showMovies(){
+
+  //Vaihdetaan elokuvien lisätietojen näyttäminen on/off
+  async function toggleMovies(){
     if(showMovies===false){
       setShowMovies(true)
     }
@@ -70,21 +87,22 @@ export default function Home() {
       <h2>Elokuvat</h2>
       <h5>Voit hakea elokuvia nimellä, näyttelijällä tai ohjaajalla</h5>
 
-    {/* enter painikkeen toimivuus */}
-    <form onSubmit={(e) => {
-      e.preventDefault();
-      searchMovies();
-    }}>
-      <input
-        type="text"
-        name="search"
-        placeholder="Hae elokuvia"
+      {/* enter painikkeen toimivuus */}
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        searchMovies();
+      }}>
+        <input
+          type="text"
+          name="search"
+          placeholder="Hae elokuvia"
 
-        // Tallennetaan hakusana searchTerm tilaan
-        onChange={(e) => setSearchTerm(e.target.value)}/> 
+          // Tallennetaan hakusana searchTerm tilaan
+          onChange={(e) => setSearchTerm(e.target.value)}/> 
 
-        <button type="submit">Hae</button>
-    </form>
+          <button type="submit">Hae</button>
+      </form>
+
         <div className="movies-container">
         
           {/* Haetaan elokuvien tiedot */}  

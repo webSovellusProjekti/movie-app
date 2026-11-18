@@ -15,7 +15,7 @@ export async function popularMovies(req, res) {
 
 // Hakee elokuvia hakusanalla TMDB API:sta ja palauttaa ne JSON-muodossa
 export async function search(req, res) {
-  const query = req.query.q;
+  const query = req.query.q; //Lukee hakusanan url osoitteesta, lähetään parametrinä q.
 
   if (typeof query !== 'string' || !query.trim()) {
     return res.status(400).json({
