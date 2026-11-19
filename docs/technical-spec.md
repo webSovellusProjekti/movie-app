@@ -42,7 +42,7 @@ Tuotannossa Express tarjoilee sekä API:n että käännetyn Reactin (`client/dis
 
 Skeema: `server/db/schema.sql`. Kaavio: `docs/erd.md` ja `docs/schema.dbml`.
 
-Istuntotaulu `user_sessions` luodaan ajonaikaisesti (`createTableIfMissing`), joten se ei ole `schema.sql`-tiedostossa.
+Istuntotaulu `user_sessions` on mukana `schema.sql`-tiedostossa. Lisäksi `connect-ph-simple` luo sen tarvittaessa itse (`createTableIfMissing`).
 
 ## API
 
@@ -54,14 +54,17 @@ Istuntotaulu `user_sessions` luodaan ajonaikaisesti (`createTableIfMissing`), jo
 | POST | /api/auth/login | Kirjautuminen | ei |
 | GET | /api/auth/me | Kirjautuneen käyttäjän tiedot | kyllä |
 | POST | /api/auth/logout | Uloskirjautuminen | kyllä |
-| GET | /api/movies/popular | Suositut elokuvat (TMDB) | ei, PR #69 |
+| GET | /api/movies/popular | Suositut elokuvat (TMDB) | ei |
+| GET | /api/movies/search?q= | Elokuvahaku nimellä (TMDB) | ei |
+| GET | /api/movies/:id | Elokuvan tiedot ja näyttelijät (TMDB) | ei |
+| POST | /api/groups | Ryhmän luonti, luoja tulee ylläpitäjäksi | kyllä, PR #80 |
 
 ## Tietoturva
 
 - Salasanat tallennetaan bcrypt-hashina.
 - SQL-kyselyt ovat parametrisoituja
 - Istuntoeväste: `httpOnly`, `sameSite: lax`, `secure` tuotannossa. App Servicen proxyn takia `trust proxy` on käytössä.
-- Salaisuudet (tietokanta, `SESSION_SECRET`, TMDB-avain) ovat ympäristömuuttujissa. `.env` ei mene GitHubiin.
+- Salaisuudet (tietokanta, `SESSION_SECRET`, TMDB-avain) ovat ympäristömuuttujissa. `.env` ei mene GitHubiin. TMDB-kutsut tehdään palvelimelta, joten avain ei päädy selaimeen itsessään.
 - Ei vielä toteutettu: kirjautumisen ja rekisteröinnin rate limiting (S2), CSP (S3), kaksivaiheinen tunnistautuminen (S4).
 
 ## Käyttöönotto
