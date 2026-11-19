@@ -1,9 +1,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react';
-
-const apiKey = import.meta.env.VITE_TMDB_API_KEY;
-
+import { api } from '../services/api'; //api-funktion käyttämiseen
 
 export default function MovieInfo() {
 
@@ -17,28 +15,22 @@ export default function MovieInfo() {
     const [actors, setActors] = useState([]);
     
     useEffect(() => {
+
         async function fetchMovie(){
-            const response = await fetch(
-                `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`
-            );
+            //Kutsutaan api-funktiota ja pyydetään tietoja
+            const data = await api(`/movies/${id}`);
+            //Sijoitetaan tieto movies tilaan.
+            setMovie(data.movie);
 
-            const data= await response.json();
-
-            setMovie(data);
-
-            //Haetaan näyttelijätiedot
-            const creditsResponse = await fetch(
-                `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`
-            );
-
-            const creditsData = await creditsResponse.json();
-
-            setActors(creditsData.cast);
+            //tallennetaan tietoihin elokuvan henkilötiedot ja näyttelijät ja jos ei löydy niin tyhjä taulukko
+            setActors(data.movie.credits.cast ?? []);
         }
         //Käynnistetään haku, kun sivu latautuu
         fetchMovie();
+
     }, [id]);
 
+    //Jos funktio toimi niin tulee seuraava teksti
     if (!movie) {
         return <p>Ladataan elokuvan tietoja...</p>;
     }
@@ -47,7 +39,6 @@ export default function MovieInfo() {
   return (
     <div>
         <h3>{movie.title}</h3>
-        <h4>{movie.actors}</h4>
 
         <img
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -57,12 +48,20 @@ export default function MovieInfo() {
         <h4>Elokuvan kuvaus</h4>
         <p>{movie.overview}</p>
 
-        <h4>Näyttelijät</h4>
+    <div>
+        {/* Julkaisuvuosi */}
+        <p>{movie.release_date?.substring(0, 4)}</p>
+    </div>
 
     <div>
-        {actors.slice(0, 10).map((actor) => (
+        <h4>Näyttelijät</h4>
+        <h4>{movie.actors}</h4>
+        {/* Otetaan näyttelijät 1-10 ja laitetaan mappiin */}
+        {actors.slice(0, 10).map((actor) => ( 
+            // Asetetaan jokaiselle riville yksi näyttelijä
             <li key={actor.id}>
-                {actor.name} – {actor.character}
+                {/* Näytetään näyttelijän nimi ja hänen esittämänsä hahmo */}
+                {actor.name} – {actor.character} 
             </li>
         ))}
     </div>
