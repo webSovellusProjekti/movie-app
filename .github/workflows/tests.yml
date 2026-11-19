@@ -26,7 +26,7 @@ jobs:
           --health-retries 10
 
     env:
-      DB_HOST: localhost
+      DB_HOST: 127.0.0.1
       DB_PORT: 5432
       DB_NAME: movieapp
       DB_USER: postgres
@@ -44,7 +44,9 @@ jobs:
           cache-dependency-path: server/package-lock.json
 
       - name: Load database schema
-        run: psql "postgresql://postgres:root@localhost:5432/movieapp" -f server/db/schema.sql
+        run: psql -h 127.0.0.1 -U postgres -d movieapp -f server/db/schema.sql
+        env:
+          PGPASSWORD: root
 
       - name: Install server dependencies
         run: npm ci
