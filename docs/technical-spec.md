@@ -70,7 +70,7 @@ Istuntotaulu `user_sessions` on mukana `schema.sql`-tiedostossa. Lisäksi `conne
 
 ## Käyttöönotto
 
-- Testit ajetaan erillisillä workfloweilla `.github/workflows/tests.yml` (API-testit) ja `.github/workflows/e2e.yml` (Playwright). Ne eivät vaikuta Azure-julkaisuun. Mainin suojasäännöt edellyttävät, että molemmat tarkistukset menevät läpi ennen mergeä.
+- Testit ajetaan erillisillä workfloweilla `.github/workflows/tests.yml` (API-testit) ja `.github/workflows/e2e.yml` (Playwright). Ne eivät vaikuta Azureen. Mainin suojasäännöt vaativat, että molemmat tarkistukset menevät läpi ennen mergeä.
 - Push `main`-haaraan käynnistää GitHub Actions -workflowin `.github/workflows/main_movie-app-2026.yml`.
 - Workflow asentaa riippuvuudet, ajaa `npm run build` ja vie paketin App Serviceen. Kesto noin 4 minuuttia.
 - Azuren App settings: `NODE_ENV`, `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_SSL`, `SESSION_SECRET`, `VITE_TMDB_API_KEY`.
