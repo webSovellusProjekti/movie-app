@@ -1,6 +1,5 @@
 // Vastaanottaa ryhmiin liittyvät HTTP-pyynnöt
-
-import { createGroup } from '../services/groupService.js';
+import { createGroup, listGroupsForUser } from '../services/groupService.js';
 
 const VISIBILITIES = ['public', 'private'];
 
@@ -50,6 +49,21 @@ export async function create(req, res) {
 
     return res.status(500).json({
       error: 'Ryhmän luonti epäonnistui.'
+    });
+  }
+}
+
+// Ryhmien listaus kirjautuneelle käyttäjälle
+export async function list(req, res) {
+  try {
+    const groups = await listGroupsForUser(req.session.user.id);
+
+    return res.status(200).json({ groups });
+  } catch (err) {
+    console.error('Listing groups failed:', err);
+
+    return res.status(500).json({
+      error: 'Ryhmien hakeminen epäonnistui.'
     });
   }
 }
