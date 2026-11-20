@@ -22,7 +22,7 @@ jobs:
         options: >-
           --health-cmd "pg_isready -U postgres -d movieapp"
           --health-interval 5s
-          --health-timout 5s
+          --health-timeout 5s
           --health-retries 10
 
     env:
