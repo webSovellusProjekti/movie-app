@@ -6,8 +6,8 @@ Tila: luonnos. Päivitetään testien lisääntyessä.
 
 - Manuaaliset API-testit (curl): ajetaan paikallisesti Dockerilla ja Azuressa.
 - Tuotantobuildin testi: `npm run build` ja `node server/src/index.js`, eli samalla tavalla kuin Azure käynnistää sovelluksen.
-- E2E-testit: Playwright (`e2e/`), ajetaan paikallisesti ja Azurea vastaan. Ajo GitHub Actionsissa: suunniteltu, ei vielä toteutettu.
-- API-testit automaattisesti: Vitest ja Supertest (`server/tests`), ajetaan paikallissta dockerissa. Ajo GitHub Actionsissa: ei vielä toteutettu.
+- E2E-testit: Playwright (`e2e/`), ajetaan paikallisesti, Azurea vastaan ja GitHub Actionsissa (`.github/workflows/e2e.yml`) jokaisessa pull requestissa ja pushissa mainiin.
+- API-testit automaattisesti: Vitest ja Supertest (`server/tests`), ajetaan paikallisesti Dockerissa ja GitHub Actionsissa (`.github/workflows/tests.yml`) jokaisessa pull requestissa ja pushissa mainiin.
 
 ## Testien ajaminen
 
@@ -46,6 +46,8 @@ E2E-testit Azurea vastaan:
 ```
 cd e2e && E2E_BASE_URL=https://movie-app-2026-d2dcfqeycwafhca3.swedencentral-01.azurewebsites.net npm test
 ```
+
+GitHub Actions ajaa molemmat testityypit automaattisesti Postgres-palvelukontilla ja `server/db/schema.sql`-skeemalla. Epäonnistunut E2E-ajo tallentaa Playwrightin tulokset artefaktiksi (`playwright-results`). Palvelinta vastaan tehtävät E2E-testit käyttävät GitHub-salaisuutta `VITE_TMDB_API_KEY`.
 
 ## Testitapaukset
 
