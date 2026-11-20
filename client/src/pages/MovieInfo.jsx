@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react';
 import { api } from '../services/api'; //api-funktion käyttämiseen
 
+
 export default function MovieInfo() {
 
     //Saadaan id tunniste Url:osoitteesta
@@ -49,6 +50,7 @@ export default function MovieInfo() {
         <p>{movie.overview}</p>
 
     <div>
+        
         {/* Julkaisuvuosi */}
         <p>{movie.release_date?.substring(0, 4)}</p>
     </div>
