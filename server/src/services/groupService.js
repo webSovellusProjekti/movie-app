@@ -7,7 +7,7 @@ export async function createGroup({ name, description, visibility, userId }) {
 
   try {
     await client.query('BEGIN');
-
+    // Luodaan ryhmä
     const groupResult = await client.query(
       `INSERT INTO groups (name, description, visibility, created_by)
       VALUES ($1, $2, $3, $4)
@@ -52,4 +52,51 @@ export async function listGroupsForUser(userId) {
   );
 
   return result.rows;
+}
+
+// Hakee yhden ryhmän tiedot käyttäjälle, tai null jos ryhmää ei role
+// tai käyttäjä ei saa nähdä sitä (yksityinen ryhmä, jonka jäsen hän ei ole)
+export async function getGroupForUser(groupId, userId) {
+  const groupResult = await pool.query(
+    `SELECT g.id,
+            g.name,
+            g.description,
+            g.visibility,
+            g.created_at,
+            (SELECT COUNT(*) FROM group_members gm
+              WHERE gm.group_id = g.id)::int AS member_count,
+            (SELECT gm.role FROM group_members gm
+              WHERE gm.group_id = g.id AND gm.user_id = $2) AS my_role
+    FROM groups g
+    WHERE g.id = $1
+      AND (g.visibility = 'public'
+            OR EXISTS (SELECT 1 FROM group_members gm
+                        WHERE gm.group_id = g.id AND gm.user_id = $2))`,
+    [groupId, userId]
+  );
+
+  const group = groupResult.rows[0];
+
+  if (!group) {
+    return null;
+  }
+
+  group.is_member = group.my_role !== null;
+  delete group.my_role;
+
+  // Jäsenlista vain jäsenille, sähköpostia ei palauteta
+  if (group.is_member) {
+    const membersResult = await pool.query(
+      `SELECT u.id, u.username, gm.role, gm.joined_at
+      FROM group_members gm
+      JOIN users u ON u.id = gm.user_id
+      WHERE gm.group_id = $1
+      ORDER BY gm.joined_at`,
+      [groupId]
+    );
+
+    group.members = membersResult.rows;
+  }
+
+  return group;
 }
