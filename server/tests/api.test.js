@@ -81,3 +81,23 @@ describe('elokuvan tiedot', () => {
     expect(res.body.error).toBe('Hakusana puuttuu.');
   });
 });
+
+describe('elokuvahaku, hakuehdot', () => {
+  it('kaksi hakuehtoa yhtä aikaa palauttaa 400', async () => {
+    const res = await request(app)
+      .get('/api/movies/search')
+      .query({ q: 'matrix', actor: 'keanu' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('Käytä vain yhtä hakuehtoa kerrallaan.');
+  });
+
+  it('liian pitkä näyttelijän nimi palauttaa 400', async () => {
+    const res = await request(app)
+      .get('/api/movies/search')
+      .query({ actor: 'a'.repeat(101) });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('Hakusana on liian pitkä.');
+  });
+});
