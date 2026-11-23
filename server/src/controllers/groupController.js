@@ -1,5 +1,5 @@
 // Vastaanottaa ryhmiin liittyvät HTTP-pyynnöt
-import { createGroup, listGroupsForUser } from '../services/groupService.js';
+import { createGroup, listGroupsForUser, getGroupForUser } from '../services/groupService.js';
 
 const VISIBILITIES = ['public', 'private'];
 
@@ -64,6 +64,37 @@ export async function list(req, res) {
 
     return res.status(500).json({
       error: 'Ryhmien hakeminen epäonnistui.'
+    });
+  }
+}
+
+// Yhden ryhmän tiedot kirjautuneelle käyttäjälle
+export async function show(req, res) {
+  const { id } = req.params;
+
+  // Vain numeromuotoinen tunniste hyväksytään
+  if (!/^\d+$/.test(id)) { // Tarkistaa onko id pelkkä numero
+    return res.status(404).json({
+      error: 'Virheellinen ryhmän tunniste.'
+    });
+  }
+
+  try {
+    const group = await getGroupForUser(id, req.session.user.id);
+
+    // Ryhmää ei ole tai käyttäjä ei saa nähdä sitä
+    if (!group) {
+      return res.status(404).json({
+        error: 'Ryhmää ei löytynyt.'
+      });
+    }
+
+    return res.status(200).json({ group });
+  } catch (err) {
+    console.error('Fetching group failed:', err);
+
+    return res.status(500).json({
+      error: 'Ryhmän hakeminen epäonnistui.'
     });
   }
 }
