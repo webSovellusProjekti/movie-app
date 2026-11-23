@@ -6,8 +6,8 @@ Tila: luonnos. Päivitetään testien lisääntyessä.
 
 - Manuaaliset API-testit (curl): ajetaan paikallisesti Dockerilla ja Azuressa.
 - Tuotantobuildin testi: `npm run build` ja `node server/src/index.js`, eli samalla tavalla kuin Azure käynnistää sovelluksen.
-- E2E-testit: (Playwright, ajo GitHub Actionsissa): suunniteltu, ei vielä toteutettu.
-- API-testit automaattisesti: suunniteltu, ei vielä toteutettu.
+- E2E-testit: Playwright (`e2e/`), ajetaan paikallisesti, Azurea vastaan ja GitHub Actionsissa (`.github/workflows/e2e.yml`) jokaisessa pull requestissa ja pushissa mainiin.
+- API-testit automaattisesti: Vitest ja Supertest (`server/tests`), ajetaan paikallisesti Dockerissa ja GitHub Actionsissa (`.github/workflows/tests.yml`) jokaisessa pull requestissa ja pushissa mainiin.
 
 ## Testien ajaminen
 
@@ -27,7 +27,27 @@ npm run build
 PORT=3002 DB_HOST=localhost SESSION_SECRET=local-test node server/src/index.js
 ```
 
-Playwright-testien ajokomennot lisätään, kun testit on otettu käyttöön.
+API-testit (Vitest ja Supertest):
+
+```
+docker compose up -d
+docker compose exec backend npm test
+```
+
+E2E-testit (Playwright), paikallista Docker-ympäristöä vastaan:
+
+```
+docker compose up -d
+cd e2e && npm test
+```
+
+E2E-testit Azurea vastaan:
+
+```
+cd e2e && E2E_BASE_URL=https://movie-app-2026-d2dcfqeycwafhca3.swedencentral-01.azurewebsites.net npm test
+```
+
+GitHub Actions ajaa molemmat testityypit automaattisesti Postgres-palvelukontilla ja `server/db/schema.sql`-skeemalla. Epäonnistunut E2E-ajo tallentaa Playwrightin tulokset artefaktiksi (`playwright-results`). Palvelinta vastaan tehtävät E2E-testit käyttävät GitHub-salaisuutta `VITE_TMDB_API_KEY`.
 
 ## Testitapaukset
 
@@ -44,5 +64,10 @@ Tila-sarake: läpäisty = ajettu ja toimi, ei testattu = ei vielä ajettu.
 | T7 | Rekisteröinti onnistuu ja salasana tallentuu tiivisteenä | manuaalinen | - | ei testattu |
 | T8 | Kirjautuminen onnistuu ja /api/auth/me palauttaa käyttäjän | manuaalinen | - | ei testattu |
 | T9 | Kirjautuminen säilyy Azuressa (secure-eväste, trust proxy) | manuaalinen | - | ei testattu |
-| T10 | Etusivu näyttää elokuvat Azuressa | manuaalinen | - | ei läpäisty, korjaus PR #69 ja Home.jsx |
+| T10 | Etusivu näyttää elokuvakortit eikä selaimessa tule virheitä | Playwright | paikallinen, Azure | läpäisty |
 | T11 | E2E: rekisteröinti, kirjautuminen ja uloskirjautuminen | Playwright | - | ei toteutettu |
+| T12 | Elokuvahaku ilman hakusanaa palauttaa 400, elokuvan virheellinen tunniste palauttaa 400, /search ei jää /:id-reitin alle | automaattinen (Supertest) | paikallinen | läpäisty |
+| T13 | Rekisteröinti puuttuvilla kentillä ja heikolla salasanalla sekä kirjautuminen tyhjillä kentillä palauttavat 400, /api/auth/me ilman kirjautumista palauttaa 401 | automaattinen (Supertest) | paikallinen | läpäisty |
+| T14 | POST /api/groups ilman kirjautumista palauttaa 401 | automaattinen (Supertest) | paikallinen | läpäisty |
+| T15 | POST /api/groups kirjautuneena palauttaa 201 ja tyhjällä nimellä 400 | manuaalinen | paikallinen | läpäisty |
+| T16 | Ryhmän luoja tulee ryhmän admin-jäseneksi (group_members) | manuaalinen | paikallinen | läpäisty |

@@ -74,3 +74,50 @@ export async function getMovieDetails(id) {
 
   return response.json();
 }
+
+// Hakee elokuvia näyttelijän nimellä: ensin henkilö, sitten elokuvat
+export async function searchMoviesByActor(name) {
+  const apiKey = process.env.VITE_TMDB_API_KEY;
+
+  if (!apiKey) {
+    throw new Error('VITE_TMDB_API_KEY puuttuu');
+  }
+
+  // 1. Etsitään henkilö nimellä
+  const personParams = new URLSearchParams({
+    api_key: apiKey,
+    query: name,
+    language: 'fi-FI'
+  });
+
+  const personResponse = await fetch(`${TMDB_BASE_URL}/search/person?${personParams}`);
+
+  if (!personResponse.ok) {
+    throw new Error(`TMDB-pyyntö epäonnistui: ${personResponse.status}`);
+  }
+
+  const personData = await personResponse.json();
+  const person = personData.results?.[0];
+
+  // Ketään ei löytynyt
+  if (!person) {
+    return [];
+  }
+
+  // 2. Haetaan henkilön elokuvat suosituimmat järjestyksessä
+  const movieParams = new URLSearchParams({
+    api_key: apiKey,
+    with_cast: String(person.id),
+    sort_by: 'popularity.desc',
+    language: 'fi-FI'
+  });
+
+  const movieResponse = await fetch(`${TMDB_BASE_URL}/discover/movie?${movieParams}`);
+
+  if (!movieResponse.ok) {
+    throw new Error(`TMDB-pyyntö epäonnistui: ${movieResponse.status}`);
+  }
+
+  const movieData = await movieResponse.json();
+  return movieData.results ?? [];
+}
