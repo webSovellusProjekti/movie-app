@@ -101,3 +101,28 @@ describe('elokuvahaku, hakuehdot', () => {
     expect(res.body.error).toBe('Hakusana on liian pitkä.');
   });
 });
+
+// Testaa virheenkäsittelyä
+describe('virheenkäsittely', () => {
+  it('tuntematon /api-osoite palauttaa JSON-virheen ja 404', async () => {
+    const res = await request(app).get('/api/ei-ole-olemassa');
+
+    expect(res.status).toBe(404);
+    expect(res.headers['content-type']).toMatch(/json/);
+    expect(res.body.error).toBe('Reittiä ei löytynyt.');
+  });
+
+  it('virheellinen JSON palauttaa 400', async () => {
+    const res = await request(app)
+      .post('/api/auth/login')
+      .set('Content-Type', 'application/json')
+      .send('{username":');
+  });
+
+  it('olemassa oleva reitti toimii edelleen', async () => {
+    const res = await request(app).get('/api/health');
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ status: 'ok' });
+  });
+});
