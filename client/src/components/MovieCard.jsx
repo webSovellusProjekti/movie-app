@@ -10,7 +10,7 @@ export default function MovieCard({movie}) {
 
   return (
     //Elokuvakortille oma linkki, josta näkee elokuvan tiedot
-    <Link to={`/movies/${movie.id}`}
+    <Link to = {`/movies/${movie.id}`}
         className= "movie-card">
             {posterUrl &&(
                 <img src={posterUrl} 

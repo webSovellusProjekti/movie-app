@@ -1,5 +1,5 @@
 import React from 'react'
-import {useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import MovieCard from '../components/MovieCard'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../services/api' //api-funktion käyttämiseen
@@ -31,7 +31,7 @@ export default function Home() {
   //Haetaan elokuvien tiedot Backendin kautta
   async function fetchMovies() {
     try {
-    //Kutsutaan api-funktiota ja pyydetään tietoja
+    //Kutsutaan api-funktiota ja pyydetään tietoja. Api funktiolla kootaan toiminnalisuudet yhteen paikkaan ja tässä pyydetään tietoja frontendille backendiltä.
     const data = await api('/movies/popular');
     //Sijoitetaan tieto movies tilaan. (epäonnistuessa ??[] = Jos data.movies on null/undefined, asetetaan tilalle tyhjä taulukko [])
     setMovies(data.movies ?? [])
@@ -46,7 +46,7 @@ export default function Home() {
   async function searchMovies() {
     //Katsotaan onko hakukenttä tyhjä/välilyöntejä
     if (!searchTerm.trim()) {
-      //Jos hakusanaa ei ole niin tuleew suositut elokuvat näkyviin
+      //Jos hakusanaa ei ole niin tulee suositut elokuvat näkyviin
       fetchMovies()
       //laitetaan sivunumerointi
       setCurrentPage(1)
