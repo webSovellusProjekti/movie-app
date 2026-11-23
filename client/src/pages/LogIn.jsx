@@ -62,7 +62,7 @@ export default function LogIn() {
       <h2>Kirjaudu sisään</h2>
 
       <form onSubmit={handleSubmit}>
-        <label>Käyttäjänimi</label>
+        {/* <label>Käyttäjänimi</label> */}
         <input
           type="text"
           name="username"
@@ -71,7 +71,7 @@ export default function LogIn() {
           placeholder="Käyttäjänimi"
         />
 
-        <label>Salasana</label>
+        {/* <label>Salasana</label> */}
         <div className="password-input-container">
           <input
             type={showPassword ? "text" : "password"}

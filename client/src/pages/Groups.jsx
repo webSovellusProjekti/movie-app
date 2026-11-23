@@ -43,9 +43,9 @@ export default function Groups() {
 
   return (
     <div>
-        <h1>Ryhmät</h1>
-
+        
         <div className = "groups-container">
+        <h1>Ryhmät</h1>
         
             {/* enter painikkeen toimivuus */}
             <form onSubmit={(e) => {
@@ -70,7 +70,7 @@ export default function Groups() {
             {/* Käydään kaikki ryhmät läpi ja näytetään yksi kerrallaan */}
                 {filteredGroups.map((group) => (
                     <div key={group.id}>
-                    <h1>{group.name}</h1>
+                    <h4>{group.name}</h4>
                     <p>{group.description}</p>
                     </div>
                 ))}

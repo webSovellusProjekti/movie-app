@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { api } from '../services/api' //api-funktion käyttämiseen
+import './NewGroup.css'
 
 export default function NewGroup() {
 
@@ -63,6 +64,7 @@ export default function NewGroup() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}           
         />
+
         <div className ="visbility-container">
         <p>Valitse</p>
 
