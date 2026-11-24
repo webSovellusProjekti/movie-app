@@ -41,4 +41,35 @@ app.get('/api/health/db', async (req, res) => {
   }
 });
 
+// Tuntematon /api-osoite palauttaa JSON-virheen HTML-sivun sijaan
+app.use('/api', (req, res) => {
+  res.status(404).json({
+    error: 'Reittiä ei löytynyt.'
+  });
+});
+
+// Keskitetty virheenkäsittely, tämän pitää olla viimeinen app.use
+// Neljä parametria tarvitaan, jotta Express tunnistaa tämän virheenkäsittelijäksi
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  // Jos vastaus on jo lähtenyt, annetaan Expressin oletuskäsittelijän hoitaa asia
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  // Virheellinen JSON pyynnön rungossa
+  if (err.type === 'entity.parse.failed') {
+    return res.status(400).json({
+      error: 'Virheellinen JSON.'
+    });
+  }
+
+  // Todellinen virhe kirjataan palvelimen lokiin, selaimelle ei kerrota yksityiskohtia
+  console.error('Unhandled error:', err);
+
+  res.status(500).json({
+    error: 'Palvelinvirhe.'
+  });
+});
+
 export default app;
