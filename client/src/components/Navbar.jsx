@@ -7,7 +7,7 @@ import './Navbar.css'
 export default function Navbar() {
 
   // Haetaan käyttäjän kirjautumistila ja uloskirjautumistoiminto
-  const {user, logout} = useAuth();
+  const {user, logout, deleteAccount} = useAuth();
 
   // Hallitaan dropdown-valikon näkyvyyttä
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,6 +21,26 @@ export default function Navbar() {
       console.error('Uloskirjautuminen epäonnistui', err);
     }
   };
+
+
+  // Käyttäjätilin poistaminen vahvistuksen jälkeen
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(
+      'Haluatko varmasti poistaa tämän käyttäjätilin?'
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await deleteAccount();
+      setMenuOpen(false);
+      window.location.href = '/';
+    } catch (err) {
+      console.error('Käyttäjätilin poistaminen epäonnistui:', err);
+      alert('Käyttäjätilin poistaminen epäonnistui. Yritä uudelleen.');
+    }
+  };
+
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -80,9 +100,7 @@ export default function Navbar() {
                     <li>
                       <button
                         className = "dropdown-item text-danger"
-                        onClick={() => {
-                          setMenuOpen(false);
-                        }}
+                        onClick={handleDeleteAccount}
                       >
                         Poista käyttäjätili
                       </button>

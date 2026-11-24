@@ -3,7 +3,8 @@ import {
   register,
   login,
   getCurrentUser,
-  logout
+  logout,
+  deleteAccount
 } from '../controllers/authController.js';
 import { requireAuth } from '../middleware/authMiddleware.js';
 
@@ -20,5 +21,8 @@ router.get('/me', requireAuth, getCurrentUser);
 
 // Uloskirjautuminen
 router.post('/logout', requireAuth, logout);
+
+// Käyttäjätilin poistaminen
+router.delete('/account', requireAuth, deleteAccount);
 
 export default router;

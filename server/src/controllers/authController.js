@@ -3,7 +3,8 @@
 import {
   registerUser,
   authenticateUser,
-  getUserById
+  getUserById,
+  deleteUserAccount
 } from '../services/authService.js';
 
 function createSession(req, user) {
@@ -184,4 +185,40 @@ export function logout(req, res) {
       message: 'Uloskirjautuminen onnistui.'
     });
   });
+}
+
+
+// Käyttäjätilin poistaminen
+export async function deleteAccount(req, res) {
+  try {
+    // Poistetaan kirjautuneen käyttäjän oma tili
+    const userId = req.session.user.id;
+
+    // Poistetaan käyttäjä ja käsitellään ryhmät
+    await deleteUserAccount(userId);
+
+    // Tuhotaan kirjautumisistunto
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Session destruction failed:', err);
+
+        return res.status(500).json({
+          error: 'Tili poistettiin, mutta uloskirjautuminen epäonnistui.'
+        });
+      }
+
+      // Poistetaan selaimen istuntoeväste
+      res.clearCookie('connect.sid');
+
+      return res.status(200).json({
+        message: 'Käyttäjätili poistettiin onnistuneesti.'
+      });
+    });
+  } catch (err) {
+    console.error('Account deletion failed:', err);
+
+    return res.status(500).json({
+      error: 'Käyttäjätilin poistaminen epäonnistui.'
+    });
+  }
 }
