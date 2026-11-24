@@ -51,7 +51,7 @@ export default function Navbar() {
               {/* Näytetään kirjautuneelle käyttäjälle */}
               <li className="nav-item">
                 <Link className="nav-link" to ="/ryhmat">
-                Omat ryhmät
+                Ryhmät
                 </Link>
               </li>
               
@@ -67,17 +67,6 @@ export default function Navbar() {
 
                 {menuOpen && (
                   <ul className = "dropdown-menu show">
-
-                    {/* Jos halutaan ryhmät näkyviin sivulle palkkiin 
-                    <li>
-                      <Link
-                        className ="dropdown-item"
-                        to="/groups"
-                        onClick={() =>setMenuOpen(false)}
-                      >
-                      Omat ryhmät
-                      </Link>
-                    </li> */}
 
                     <li>
                       <button

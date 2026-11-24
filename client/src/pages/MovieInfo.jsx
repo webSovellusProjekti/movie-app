@@ -7,7 +7,7 @@ import { api } from '../services/api'; //api-funktion käyttämiseen
 export default function MovieInfo() {
 
     //Saadaan id tunniste Url:osoitteesta
-    const { id} = useParams();
+    const { id } = useParams();
 
     //Haetaan tiedot ja tallennetaan tiedot
     const [movie, setMovie] = useState(null);
@@ -18,7 +18,7 @@ export default function MovieInfo() {
     useEffect(() => {
 
         async function fetchMovie(){
-            //Kutsutaan api-funktiota ja pyydetään tietoja
+            //Kutsutaan api-funktiota ja pyydetään tietoja backendiltä
             const data = await api(`/movies/${id}`);
             //Sijoitetaan tieto movies tilaan.
             setMovie(data.movie);
