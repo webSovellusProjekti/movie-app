@@ -68,3 +68,98 @@ export async function getUserById(userId) {
 
   return result.rows[0] ?? null;
 }
+
+
+// Poistaa käyttäjätilin ja käsittelee käyttäjän ryhmäjäsenyydet
+export async function deleteUserAccount(userId) {
+  const client = await pool.connect();
+
+  try {
+    // Aloitetaan tietokantatransaktio
+    await client.query('BEGIN');
+
+    // Haetaan käyttäjän ryhmät ja lukitaan niiden tiedot
+    const memberships = await client.query(
+      `SELECT group_id, role
+       FROM group_members
+       WHERE user_id = $1
+       ORDER BY group_id
+       FOR UPDATE`,
+      [userId]
+    );
+
+    // Käsitellään jokainen ryhmä erikseen
+    for (const membership of memberships.rows) {
+      const { group_id, role } = membership;
+
+      // Haetaan muut ryhmän jäsenet aakkosjärjestyksessä
+      const otherMembers = await client.query(
+        `SELECT gm.user_id
+         FROM group_members gm
+         JOIN users u ON u.id = gm.user_id
+         WHERE gm.group_id = $1
+           AND gm.user_id != $2
+         ORDER BY u.username ASC, gm.user_id ASC
+         FOR UPDATE OF gm`,
+        [group_id, userId]
+      );
+
+      // Jos ryhmässä ei ole muita jäseniä, poistetaan ryhmä
+      if (otherMembers.rows.length === 0) {
+        await client.query(
+          'DELETE FROM groups WHERE id = $1',
+          [group_id]
+        );
+
+        continue;
+      }
+
+      // Jos poistettava käyttäjä on admin,
+      // siirretään admin-rooli seuraavalle jäsenelle
+      if (role === 'admin') {
+        const newAdmin = otherMembers.rows[0];
+
+        await client.query(
+          `UPDATE group_members
+           SET role = 'admin'
+           WHERE group_id = $1
+             AND user_id = $2`,
+          [group_id, newAdmin.user_id]
+        );
+      }
+
+      // Poistetaan käyttäjän jäsenyys ryhmästä
+      await client.query(
+        `DELETE FROM group_members
+         WHERE group_id = $1
+           AND user_id = $2`,
+        [group_id, userId]
+      );
+    }
+
+    // Poistetaan käyttäjä
+    const result = await client.query(
+      'DELETE FROM users WHERE id = $1 RETURNING id',
+      [userId]
+    );
+
+    // Käyttäjää ei löytynyt
+    if (result.rowCount === 0) {
+      throw new Error('Käyttäjää ei löytynyt.');
+    }
+
+    // Vahvistetaan kaikki muutokset
+    await client.query('COMMIT');
+
+    return true;
+
+  } catch (err) {
+    // Virheen sattuessa perutaan kaikki muutokset
+    await client.query('ROLLBACK');
+    throw err;
+
+  } finally {
+    // Vapautetaan tietokantayhteys
+    client.release();
+  }
+}
