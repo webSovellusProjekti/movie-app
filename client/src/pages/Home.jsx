@@ -19,7 +19,7 @@ export default function Home() {
 
   //Sivun vaihto (12 elokuvaa per sivu)
   const [currentPage, setCurrentPage] = useState(1)
-  const moviesPerPage = 12
+  const moviesPerPage = 20
 
   const indexOfLastMovie = currentPage * moviesPerPage
   const indexOfFirstMovie = indexOfLastMovie - moviesPerPage
