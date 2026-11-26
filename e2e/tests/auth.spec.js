@@ -40,4 +40,18 @@ test('rekisteröinti ja kirjautuminen selaimessa', async ({ page }) => {
   const me = await page.request.get('/api/auth/me');
   expect(me.status()).toBe(200);
   expect((await me.json()).user.username).toBe(username);
+
+  // Uloskirjautuminen: kirjautuneen navigointi näkyy vasta kun käyttäjä on sisällä
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Oma tili' }).click();
+
+  const [logoutResponse] = await Promise.all([
+    page.waitForResponse((r) => r.url().includes('/api/auth/logout')),
+    page.getByRole('button', { name: 'Kirjaudu ulos' }).click()
+  ]);
+  expect(logoutResponse.status()).toBe(200);
+
+  // Istunto on päättynyt
+  const meAfter = await page.request.get('/api/auth/me');
+  expect(meAfter.status()).toBe(401);
 });
