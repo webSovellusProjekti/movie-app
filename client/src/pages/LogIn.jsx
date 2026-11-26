@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthProvider'
+import './Auth.css'
 
 export default function LogIn() {
 
@@ -57,62 +58,62 @@ export default function LogIn() {
 };
 
   return (
-    <div className="register-container">
-
-      <h2>Kirjaudu sisään</h2>
-
-      <form onSubmit={handleSubmit}>
-        {/* <label>Käyttäjänimi</label> */}
-        <input
-          type="text"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-          placeholder="Käyttäjänimi"
-        />
-
-        {/* <label>Salasana</label> */}
-        <div className="password-input-container">
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2>Kirjaudu sisään</h2>
+        
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <label>Käyttäjänimi</label>
           <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            value={formData.password}
+            type="text"
+            name="username"
+            value={formData.username}
             onChange={handleChange}
-            placeholder="Salasana"
+            placeholder="Käyttäjänimi"
           />
 
-          <button
-            type="button"
-            className="password-toggle"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? "Piilota" : "Näytä"}
+          <label>Salasana</label>
+          <div className="password-input-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Salasana"
+            />
+
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "Piilota" : "Näytä"}
+            </button>
+          </div>
+
+          {/* virheilmoitus */}
+          {error && (
+            <p className="error-message">{error}</p>
+          )}
+
+          {/* Onnistumisviesti */}
+          {success && (
+            <p className="success-message">{success}</p>
+          )}
+
+          <button type="submit">
+            Kirjaudu
           </button>
-        </div>
 
-        {/* virheilmoitus */}
-        {error && (
-          <p className="error-message">{error}</p>
-        )}
+          <p>
+            Eikö sinulla ole vielä käyttäjätiliä? {' '}
+            <Link to="/rekisterointi">
+              Rekisteröidy tästä
+            </Link>
+          </p>
 
-        {/* Onnistumisviesti */}
-        {success && (
-          <p className="success-message">{success}</p>
-        )}
-
-        <button type="submit">
-          Kirjaudu
-        </button>
-
-        <p>
-          Eikö sinulla ole vielä käyttäjätiliä? {' '}
-          <Link to="/rekisterointi">
-            Rekisteröidy tästä
-          </Link>
-        </p>
-
-      </form>
-
+        </form>
+      </div>
     </div>
   )
 }

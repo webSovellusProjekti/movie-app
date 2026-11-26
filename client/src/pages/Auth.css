@@ -1,0 +1,175 @@
+.auth-page {
+    display: grid;
+    place-items: center;
+    padding: 2rem 1rem;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.auth-card{
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 32rem;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 1);
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 1rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.auth-page h2{
+    font-size: 2rem;
+    text-align: center;
+    overflow-wrap: anywhere;
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.auth-form label {
+    font-weight: 600;
+    font-size: 1rem;
+    color: rgb(37, 37, 37);
+}
+
+.auth-form input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 1rem;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+
+.password-input-container {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 1rem;
+    background-color: white;
+    overflow: hidden;
+}
+
+.password-input-container input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+.password-toggle {
+    margin: 0;
+    padding: 0.5rem 0.7rem;
+    border: none;
+    background-color: rgb(234, 234, 234);
+    cursor: pointer;
+    white-space: nowrap;
+    align-self: stretch;
+}
+
+.password-toggle:hover {
+    background-color: rgb(210, 210, 210);
+}
+
+.password-requirements {
+    margin-top: 0.25rem;
+}
+
+.auth-form .password-requirements-title {
+    text-align: left;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0 0 0.4rem 0;
+}
+
+.password-requirements ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 0.75rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.password-requirements li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: rgb(0, 0, 0);
+}
+
+.password-requirements li::before {
+    content: "○";
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.password-requirements li.valid {
+    color: rgb(38, 155, 88);
+}
+
+.password-requirements li.valid::before {
+    content: "✓";
+}
+
+.auth-form button[type="submit"] {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 1rem;
+    background-color: rgba(234, 234, 234);
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.auth-form button[type="submit"]:hover {
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+.error-message {
+    color: rgb(253, 0, 0);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.success-message {
+    color: rgba(0, 0, 0);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.auth-form p {
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.auth-form a {
+    color: rgb(0, 0, 0, 0.5);
+    font-weight: 600;
+}
+
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 1.5rem;
+    }
+
+    .auth-card h2 {
+        font-size: 1.7rem;
+    }
+}

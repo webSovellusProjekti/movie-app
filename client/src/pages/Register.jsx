@@ -112,102 +112,117 @@ export default function Register() {
   };
 
   return (
-    <div className="register-container">
-      <h2>Rekisteröidy</h2>
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2>Rekisteröidy</h2>
 
-      <form onSubmit={handleSubmit}>
+        <form className="auth-form" onSubmit={handleSubmit} noValidate>
 
-        <label>Käyttäjänimi</label>
-        <input
-          type="text"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-          placeholder="Käyttäjänimi"
-        />
-
-        <label>Sähköposti</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder="Sähköpostiosoite"
-        />
-
-        <label>Kirjoita sähköposti uudelleen</label>
-        <input
-          type="email"
-          name="confirmEmail"
-          value={formData.confirmEmail}
-          onChange={handleChange}
-          placeholder="Sähköpostiosoite uudelleen"
-        />
-
-        <label>Salasana</label>
-        <div className="password-input-container">
+          <label>Käyttäjänimi</label>
           <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            value={formData.password}
+            type="text"
+            name="username"
+            value={formData.username}
             onChange={handleChange}
-            placeholder="Salasana"
+            placeholder="Käyttäjänimi"
           />
 
-          <button
-            type="button"
-            className="password-toggle"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? "Piilota" : "Näytä"}
-          </button>
-        </div>
-
-        <label>Kirjoita salasana uudelleen</label>
-        <div className="password-input-container">
+          <label>Sähköposti</label>
           <input
-            type={showConfirmPassword ? "text" : "password"}
-            name="confirmPassword"
-            value={formData.confirmPassword}
+            type="email"
+            name="email"
+            value={formData.email}
             onChange={handleChange}
-            placeholder="Salasana uudelleen"
+            placeholder="Sähköpostiosoite"
           />
 
-          <button
-            type="button"
-            className="password-toggle"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          >
-            {showConfirmPassword ? "Piilota" : "Näytä"}
+          <label>Kirjoita sähköposti uudelleen</label>
+          <input
+            type="email"
+            name="confirmEmail"
+            value={formData.confirmEmail}
+            onChange={handleChange}
+            placeholder="Sähköpostiosoite uudelleen"
+          />
+
+          <label>Salasana</label>
+          <div className="password-input-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Salasana"
+            />
+
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "Piilota" : "Näytä"}
+            </button>
+          </div>
+
+          <label>Kirjoita salasana uudelleen</label>
+          <div className="password-input-container">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Salasana uudelleen"
+            />
+
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? "Piilota" : "Näytä"}
+            </button>
+          </div>
+
+          <div className="password-requirements">
+              <p className="password-requirements-title">
+                Salasanan tulee sisältää vähintään:
+              </p>
+              <ul>
+                  <li className={formData.password.length >= 8 ? "valid" : ""}>
+                      8 merkkiä
+                  </li>
+                  <li className={/[A-Z]/.test(formData.password) ? "valid" : ""}>
+                      Yksi iso kirjain (A-Z)
+                  </li>
+                  <li className={/[a-z]/.test(formData.password) ? "valid" : ""}>
+                      Yksi pieni kirjain (a-z)
+                  </li>
+                  <li className={/[0-9]/.test(formData.password) ? "valid" : ""}>
+                      Yksi numero (0-9)
+                  </li>
+                  <li className={/[^A-Za-z0-9]/.test(formData.password) ? "valid" : ""}>
+                      Yksi erikoismerkki (!?@#...)
+                  </li>
+              </ul>
+          </div>
+
+
+          {/* Virheilmoitus */}
+          {error && (
+            <p className="error-message">{error}</p>
+          )}
+
+          {/* Onnistumisviesti */}
+          {success && (
+            <p className="success-message">{success}</p>
+          )}
+
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Rekisteröidään..." : "Valmis"}
           </button>
-        </div>
-
-        <div className="password-requirements">
-          <p>Salasanan tulee sisältää:</p>
-          <ul>
-            <li>Vähintään 8 merkkiä</li>
-            <li>Vähintään yksi iso kirjain (A-Z)</li>
-            <li>Vähintään yksi pieni kirjain (a-z)</li>
-            <li>Vähintään yksi numero (0-9)</li>
-            <li>Vähintään yksi erikoismerkki (!?@#...)</li>
-          </ul>
-        </div>
-
-        {/* Virheilmoitus */}
-        {error && (
-          <p className="error-message">{error}</p>
-        )}
-
-        {/* Onnistumisviesti */}
-        {success && (
-          <p className="success-message">{success}</p>
-        )}
-
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Rekisteröidään..." : "Valmis"}
-        </button>
-        
-      </form>
+          
+        </form>
+      </div>
     </div>
 
   )
