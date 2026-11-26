@@ -11,6 +11,9 @@ export default function Home() {
   //Tyhjä hakurivi
   const [movies, setMovies] = useState([])
 
+  //näyttelijähaku
+  const [searchType, setSearchType] = useState('q')
+
   //Tarkisteaan tilamuuttujan arvo ja vaihdetaan se päinvastaiseksi
   const [showMovies, setShowMovies] = useState(false);
 
@@ -52,19 +55,33 @@ export default function Home() {
       setCurrentPage(1)
       return
     }
-    try {
-      //Lähetetään hakusana backendille. EncodeURIComponent muuntaa hakusanan URL-osoitteeseen sopivaan muotoon
-      const data = await api(`/movies/search?q=${encodeURIComponent(searchTerm.trim())}`)
-      //tallennetaan tiedot movies tilaan
-      setMovies(data.movies ?? [])
-    }
-    //Virhetilanteessa tulee tyhjä taulukko
-    catch{
-      setMovies([])
-    }
-    //Palauteaan sivunumerointi ekalle sivulle.
-    setCurrentPage(1)
+    try {      
+        const search = encodeURIComponent(searchTerm.trim())
+
+        // Haetaan elokuvat elokuvan nimellä ja näyttelijän nimellä
+        const [titleData, actorData] = await Promise.all([
+            api(`/movies/search?q=${search}`),
+            api(`/movies/search?actor=${search}`)
+        ])
+        
+        // Yhdistetään molempien hakujen tulokset
+        const combinedMovies = [
+            ...(titleData.movies ?? []),
+            ...(actorData.movies ?? [])
+        ]
+
+        // Poistetaan mahdolliset päällekkäiset elokuvat ID:n perusteella
+        const uniqueMovies = [
+            ...new Map(combinedMovies.map(movie => [movie.id, movie])).values()
+        ]
+
+        setMovies(uniqueMovies)
+        setCurrentPage(1)
+
+    } catch (error) { //Virhetilanteessa tulee tyhjä taulukko
+        console.error('Elokuvien haku epäonnistui:', error)
   }
+}
 
   //Vaihdetaan elokuvien lisätietojen näyttäminen on/off
   async function toggleMovies(){
