@@ -75,6 +75,7 @@ export default function Groups() {
                     <div key={group.id}
                     onClick={() => navigate(`/ryhmat/${group.id}`)}>
                     <h4>{group.name}</h4>
+                    {group.visibility === 'public' ? 'Julkinen ryhmä' : 'Yksityinen ryhmä'}
                     <p>{group.description}</p>
 
                     </div>

@@ -17,7 +17,7 @@ export default function GroupInfo() {
             try {
              //Kutsutaan api-funktiota ja pyydetään tietoja backendiltä
              const data = await api(`/groups/${id}`);
-             //Sijoitetaan tieto movies tilaan.
+             //Sijoitetaan tieto group tilaan.
              setGroups(data.group);
         
             } catch (error) {
