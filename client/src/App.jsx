@@ -11,6 +11,7 @@ import{ Routes,Route } from 'react-router-dom' //sivun polkua varten
 import { AuthProvider } from './context/AuthProvider' //autentikointi ja auktorisointia varten
 import MovieInfo from './pages/MovieInfo'
 import Groups from './pages/Groups'
+import GroupInfo from './pages/GroupInfo'
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
             <Route path="/movies/:id" exact element={<MovieInfo />} />
             <Route path="/*" exact element={<NotFound />} />
             <Route path="/ryhmat" exact element= {<Groups/>}/>
+            <Route path="/ryhmat/:id" exact element= {<GroupInfo/>}/>
           </Routes>
         </div>
         <Footer />

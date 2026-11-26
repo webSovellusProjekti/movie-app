@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import { api } from '../services/api' 
 import NewGroup from '../components/NewGroup'
+import { useNavigate } from 'react-router-dom'
 
 export default function Groups() {
 
@@ -11,8 +12,10 @@ export default function Groups() {
     //Haetaan tietoja
     const [searchTerm, setSearchTerm] = useState('');
 
-        // Näytettävät ryhmät
+    // Näytettävät ryhmät
     const [filteredGroups, setFilteredGroups] = useState([])
+
+    const navigate = useNavigate();
 
     //Suoritetaan ensimmäisenä sivun lataamisesta
     async function fetchGroups() {
@@ -66,15 +69,17 @@ export default function Groups() {
 
         </div>
             
-            <div className = "searchGroups-container">
             {/* Käydään kaikki ryhmät läpi ja näytetään yksi kerrallaan */}
                 {filteredGroups.map((group) => (
-                    <div key={group.id}>
+                    <div className = "searchGroups-container">
+                    <div key={group.id}
+                    onClick={() => navigate(`/ryhmat/${group.id}`)}>
                     <h4>{group.name}</h4>
                     <p>{group.description}</p>
+
+                    </div>
                     </div>
                 ))}
-            </div>
 
         {/* Ohjautuu NewGroup komponenttiin */}
         <NewGroup/>
