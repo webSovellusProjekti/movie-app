@@ -70,7 +70,7 @@ export default function MovieInfo() {
         ))}
     </div>
 
-    <Review/>
+    <Review movieId={id} />
 
     <button 
         type="button"
