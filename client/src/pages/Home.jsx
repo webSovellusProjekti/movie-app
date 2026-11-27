@@ -78,7 +78,7 @@ export default function Home() {
         setMovies(uniqueMovies)
         setCurrentPage(1)
 
-    } catch (error) { //Virhetilanteessa tulee tyhjä taulukko
+    } catch (error) { //Virhetilanteessa tulee tyhjä
         console.error('Elokuvien haku epäonnistui:', error)
   }
 }
