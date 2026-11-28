@@ -1,5 +1,5 @@
 import express from 'express';
-import { create, list, show, leave } from '../controllers/groupController.js';
+import { create, list, show, leave, join } from '../controllers/groupController.js';
 import { requireAuth } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -15,5 +15,8 @@ router.get('/:id', requireAuth, show);
 
 // Poistuminen ryhmästä, vaatii kirjautumisen
 router.delete('/:id/leave', requireAuth, leave);
+
+// Liittyminen julkiseen ryhmään, vaatii kirjautumisen
+router.post('/:id/join', requireAuth, join);
 
 export default router;

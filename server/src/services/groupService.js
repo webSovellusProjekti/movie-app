@@ -156,3 +156,31 @@ export async function getGroupForUser(groupId, userId) {
 
   return group;
 }
+
+// Liittyy julkiseen ryhmään jäseneksi.
+// Palauttaa { notFound: true }, jos ryhmää ei ole tai se on yksityinen,
+// ja { alreadyMember: true }, jos käyttäjä on jo jäsen.
+export async function joinGroup({ groupId, userId }) {
+  const groupResult = await pool.query(
+    `SELECT id FROM groups WHERE id = $1 AND visibility = 'public'`,
+    [groupId]
+  );
+
+  if (groupResult.rows.length === 0) {
+    return { notFound: true };
+  }
+
+  const insertResult = await pool.query(
+    `INSERT INTO group_members (group_id, user_id, role)
+    VALUES ($1, $2, 'member')
+    ON CONFLICT(group_id, user_id) DO NOTHING
+    RETURNING group_id`,
+    [groupId, userId]
+  );
+
+  if (insertResult.rows.length === 0) {
+    return { alreadyMember: true };
+  }
+
+  return { joined: true };
+}
