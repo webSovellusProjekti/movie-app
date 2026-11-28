@@ -1,4 +1,5 @@
 import { getPopularMovies, searchMovies, getMovieDetails, searchMoviesByActor } from '../services/tmdbService.js';
+import { createReview as saveReview } from '../services/reviewService.js'
 
 // Hakee suosituimmat elokuvat TMDB API:sta ja palauttaa ne JSON-muodossa
 export async function popularMovies(req, res) {
@@ -83,3 +84,71 @@ export async function movieDetails(req, res) {
     });
   }
 }
+
+// Tallentaa käyttäjän julkisen arvostelun
+export async function createReview(req, res) {
+  const { id } = req.params;
+  const { review } = req.body;
+
+  // Tarkistetaan elokuvan tunniste
+  if (!/^\d+$/.test(id)) {
+    return res.status(400).json({
+      error: 'Virheellinen elokuvan tunniste.'
+    });
+  }
+
+  // Tarkistetaan arvostelun sisältö
+  if (typeof review !== 'string' || !review.trim()) {
+    return res.status(400).json({
+      error: 'Arvostelu ei voi olla tyhjä.'
+    });
+  }
+
+  if (review.length > 5000) {
+    return res.status(400).json({
+      error: 'Arvostelu voi sisältää enintään 5000 merkkiä.'
+    });
+  }
+
+  // Estetään HTML-tagit
+  if (/<[^>]*>/.test(review)) {
+    return res.status(400).json({
+      error: 'Arvostelu ei voi sisältää HTML-tageja.'
+    });
+  }
+
+  // Estetään linkit
+  if (/(https?:\/\/|www\.)/i.test(review)) {
+    return res.status(400).json({
+      error: 'Arvostelu ei voi sisältää linkkejä.'
+    });
+  }
+
+  try {
+    const savedReview = await saveReview({
+      tmdbId: Number(id),
+      userId: req.session.user.id,
+      body: review.trim()
+    });
+
+    return res.status(201).json({
+      message: 'Arvostelu julkaistiin onnistuneesti.',
+      review: savedReview
+    });
+
+  } catch (err) {
+    // Käyttäjä on jo arvostellut saman elokuvan
+    if (err.code === '23505') {
+      return res.status(409).json({
+        error: 'Olet jo julkaissut arvostelun tästä elokuvasta.'
+      });
+    }
+
+    console.error('Creating review failed:', err);
+
+    return res.status(500).json({
+      error: 'Arvostelun julkaiseminen epäonnistui.'
+    });
+  }
+}
+

@@ -11,18 +11,20 @@ export const sessionMiddleware = session({
   store: new PgSession({
     pool: pool,
     tableName: 'user_sessions',
-    createTableIfMissing: true
+    createTableIfMissing: true,
+    ttl: 60 * 30 // session voimassaoloaika tietokannassa: 30 min
   }),
 
   secret: process.env.SESSION_SECRET,
 
   resave: false,
   saveUninitialized: false,
+  rolling: true,
 
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    maxAge: 1000 * 60 * 60 * 24
+    maxAge: 1000 * 60 * 30
   }
 });

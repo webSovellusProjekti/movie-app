@@ -1,10 +1,13 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react';
 import { api } from '../services/api'; //api-funktion käyttämiseen
+import Review from '../components/Review'
 
 
 export default function MovieInfo() {
+
+    const navigate = useNavigate();
 
     //Saadaan id tunniste Url:osoitteesta
     const { id } = useParams();
@@ -35,7 +38,6 @@ export default function MovieInfo() {
     if (!movie) {
         return <p>Ladataan elokuvan tietoja...</p>;
     }
-
     
   return (
     <div>
@@ -67,6 +69,16 @@ export default function MovieInfo() {
             </li>
         ))}
     </div>
+
+    <Review movieId={id} />
+
+    <button 
+        type="button"
+        className="back-button"
+        onClick={() => navigate('/')}
+    >
+        Takaisin
+    </button>
     
     </div>
   )
