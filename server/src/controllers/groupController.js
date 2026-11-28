@@ -1,6 +1,6 @@
 // Vastaanottaa ryhmiin liittyvät HTTP-pyynnöt
 // Tietokantavirheet välittyvät keskitetylle virheenkäsittelijälle (app.js)
-import { createGroup, listGroupsForUser, getGroupForUser, leaveGroup } from '../services/groupService.js';
+import { createGroup, listGroupsForUser, getGroupForUser, leaveGroup, joinGroup } from '../services/groupService.js';
 
 const VISIBILITIES = ['public', 'private'];
 
@@ -109,5 +109,40 @@ export async function leave(req, res) {
   // Tavallinen jäsen poistui ryhmästä
   return res.status(200).json({
     message: 'Poistuit ryhmästä.'
+  });
+}
+
+// Liittyminen julkiseen ryhmään
+export async function join(req, res) {
+  const { id } = req.params;
+
+  // Tarkistetaan, että ryhmän tunniste on numero
+  if (!/^\d+$/.test(id)) {
+    return res.status(404).json({
+      error: 'Virheellinen ryhmän tunniste.'
+    });
+  }
+
+  const result = await joinGroup({
+    groupId: id,
+    userId: req.session.user.id
+  });
+
+  // Ryhmää ei ole tai se on yksityinen
+  if (result.notFound) {
+    return res.status(404).json({
+      error: 'Ryhmää ei löytynyt.'
+    });
+  }
+
+  // Käyttäjä on jo jäsen
+  if (result.alreadyMember) {
+    return res.status(409).json({
+      error: 'Olet jo ryhmän jäsen.'
+    });
+  }
+
+  return res.status(201).json({
+    message: 'Liityit ryhmään.'
   });
 }
