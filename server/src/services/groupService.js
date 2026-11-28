@@ -34,6 +34,62 @@ export async function createGroup({ name, description, visibility, userId }) {
   }
 }
 
+
+
+// Ryhmästä poistuminen
+export async function leaveGroup({ groupId, userId }) {
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    // Tarkistetaan käyttäjän rooli ryhmässä
+    const memberResult = await client.query(
+      `SELECT role
+       FROM group_members
+       WHERE group_id = $1 AND user_id = $2`,
+      [groupId, userId]
+    );
+
+    // Käyttäjä ei ole ryhmän jäsen
+    if (memberResult.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return { notMember: true };
+    }
+
+    // Jos käyttäjä on ylläpitäjä, poistetaan koko ryhmä
+    if (memberResult.rows[0].role === 'admin') {
+      await client.query(
+        `DELETE FROM groups
+         WHERE id = $1`,
+        [groupId]
+      );
+
+      await client.query('COMMIT');
+      return { deleted: true };
+    }
+
+    // Tavallinen jäsen poistuu ryhmästä
+    await client.query(
+      `DELETE FROM group_members
+       WHERE group_id = $1 AND user_id = $2`,
+      [groupId, userId]
+    );
+
+    await client.query('COMMIT');
+    return { deleted: false };
+
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+
+
+
 // Hakee ryhmät, jotka käyttäjä saa nähdä:
 // Kaikki julkiset ryhmät ja ne yksityiset ryhmät, joiden jäsen käyttäjä on
 export async function listGroupsForUser(userId) {

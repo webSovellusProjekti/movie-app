@@ -32,9 +32,44 @@ export default function GroupInfo() {
     if (!groups) {
         return <p>Ladataan ryhmän tietoja...</p>;
     }
+
+    // Ryhmään liittyminen
+    const JoinGroup = async () => {
+        try {
+            await api(`/groups/${id}/join`, {
+            method: 'POST'
+            });
+
+            // Päivitetään ryhmän tiedot
+            const data = await api(`/groups/${id}`);
+            setGroups(data.group);
+
+        } catch (error) {
+        console.error('Ryhmään liittyminen epäonnistui:', error);
+        alert(error.message);
+        }
+    };
+
+    // Ryhmästä poistuminen
+    const LeaveGroup = async () => {
+        try {
+            await api(`/groups/${id}/leave`, {
+            method: 'DELETE'
+            });
+
+        // Palataan ryhmien listaukseen
+        navigate('/ryhmat');
+
+        } catch (error) {
+        console.error('Ryhmän poistuminen epäonnistui:', error);
+        alert(error.message);
+        }
+    };
    
   return (
     <div>
+        <div className="group-page">
+
         <div className= "group-container">
         <h3>{groups.name}</h3>
         <p>
@@ -46,19 +81,12 @@ export default function GroupInfo() {
         <label>Kuvaus</label>
         <p>{groups.description}</p>
 
-        <button onClick={() => 
-            console.log('Liittymispyyntö ryhmään:', id)}>
+        <button onClick={JoinGroup}>
             Liity ryhmään
         </button>
 
-        <button onClick={() => 
-            console.log('Poistumispyyntö ryhmään:', id)}>
+        <button onClick={LeaveGroup}>
             Poistu ryhmästä
-        </button>
-
-        <button onClick={() => 
-            console.log('Lisätään elokuvia ryhmään:', id)}>
-            Lisää suosikki elokuvia
         </button>
 
         <button onClick={() => navigate('/ryhmat')}>
@@ -66,6 +94,30 @@ export default function GroupInfo() {
         </button>
 
         </div>
+
+        <div>
+        <div className= "list-container">
+            <h3>Suosikkilista</h3>
+            
+            {/* enter painikkeen toimivuus */}
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                searchMovies();
+            }}>
+            <input
+                type="text"
+                name="search"
+                placeholder="Hae elokuvia"
+
+                // Tallennetaan hakusana searchTerm tilaan
+                onChange={(e) => setSearchTerm(e.target.value)}/> 
+
+                <button type="submit">Hae</button>
+            </form>
+
+        </div>
+        </div>
+        </div>   
 
     </div>
   )

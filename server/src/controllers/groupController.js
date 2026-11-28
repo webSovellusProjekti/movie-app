@@ -1,6 +1,6 @@
 // Vastaanottaa ryhmiin liittyvät HTTP-pyynnöt
 // Tietokantavirheet välittyvät keskitetylle virheenkäsittelijälle (app.js)
-import { createGroup, listGroupsForUser, getGroupForUser } from '../services/groupService.js';
+import { createGroup, listGroupsForUser, getGroupForUser, leaveGroup } from '../services/groupService.js';
 
 const VISIBILITIES = ['public', 'private'];
 
@@ -74,4 +74,40 @@ export async function show(req, res) {
   }
 
   return res.status(200).json({ group });
+}
+
+// Ryhmästä poistuminen
+export async function leave(req, res) {
+  const { id } = req.params;
+
+  // Tarkistetaan, että ryhmän tunniste on numero
+  if (!/^\d+$/.test(id)) {
+    return res.status(404).json({
+      error: 'Virheellinen ryhmän tunniste.'
+    });
+  }
+
+  const result = await leaveGroup({
+    groupId: id,
+    userId: req.session.user.id
+  });
+
+  // Käyttäjä ei ole ryhmän jäsen
+  if (result.notMember) {
+    return res.status(404).json({
+      error: 'Et ole ryhmän jäsen.'
+    });
+  }
+
+  // Ylläpitäjän poistuessa koko ryhmä poistetaan
+  if (result.deleted) {
+    return res.status(200).json({
+      message: 'Ryhmä poistettu.'
+    });
+  }
+
+  // Tavallinen jäsen poistui ryhmästä
+  return res.status(200).json({
+    message: 'Poistuit ryhmästä.'
+  });
 }
