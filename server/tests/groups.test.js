@@ -37,3 +37,12 @@ describe('ryhmän sivu', () => {
     expect(res.body.error).toBe('Kirjautuminen vaaditaan.');
   });
 });
+
+describe('ryhmään liittyminen', () => {
+  it('ilman kirjautumista palauttaa 401', async () => {
+    const res = await request(app).post('/api/groups/1/join');
+
+    expect(res.status).toBe(401);
+    expect(res.body.error).toBe('Kirjautuminen vaaditaan.');
+  });
+});
