@@ -126,3 +126,23 @@ describe('virheenkäsittely', () => {
     expect(res.body).toEqual({ status: 'ok' });
   });
 });
+
+describe('arvostelun julkaisu', () => {
+  it('ilman kirjautumista palauttaa 401', async () => {
+    const res = await request(app)
+      .post('/api/movies/603/reviews')
+      .send({ rating: 5, body: 'Hyvä' });
+
+    expect(res.status).toBe(401);
+    expect(res.body.error).toBe('Kirjautuminen vaaditaan.');
+  });
+});
+
+describe('arvostelun tarkistuksen', () => {
+  // Kirjautumaton saa 401 ennen sisällön tarkistusta, joten näihin tarvitaan kirjautuminen
+  it('virheellinen elokuvan tunniste ilman kirjautumista palauttaa 401', async () => {
+    const res = await request(app).post('/api/movies/abc/reviews').send({ review: 'Hyvä' });
+
+    expect(res.status).toBe(401);
+  });
+});

@@ -37,3 +37,12 @@ describe('ryhmän sivu', () => {
     expect(res.body.error).toBe('Kirjautuminen vaaditaan.');
   });
 });
+
+describe('ryhmästä poistuminen', () => {
+  it('ilman kirjautumista palauttaa 401', async () => {
+    const res = await request(app).delete('/api/groups/1/leave');
+
+    expect(res.status).toBe(401);
+    expect(res.body.error).toBe('Kirjautuminen vaaditaan.');
+  });
+});
